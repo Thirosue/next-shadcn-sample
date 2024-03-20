@@ -1,45 +1,22 @@
 import { db } from "@/db"
-import { roleEnum, rolePermissions, roles, stores, users } from "@/db/schema"
+import {
+  permissionTypeEnum,
+  roleEnum,
+  rolePermissions,
+  roles,
+  stores,
+} from "@/db/schema"
 
 import {
   seedCategories,
   seedProducts,
   seedSubcategories,
+  seedUsers,
 } from "@/lib/actions/seed"
 
 const adminRole = roleEnum.enumValues[0]
 const userRole = roleEnum.enumValues[1]
 const operatorRole = roleEnum.enumValues[2]
-
-const initUsers = [
-  {
-    id: "user1",
-    name: "John Doe",
-    email: "test@test.com",
-    emailVerified: new Date("2024-01-01T00:00:00Z"),
-    password: "password123",
-    role: adminRole,
-    image: "https://example.com/path/to/johndoe.jpg",
-  },
-  {
-    id: "user2",
-    name: "Jane Smith",
-    email: "janesmith@example.com",
-    emailVerified: null,
-    password: "password456",
-    role: userRole,
-    image: "https://example.com/path/to/janesmith.jpg",
-  },
-  {
-    id: "user3",
-    name: "Alice Johnson",
-    email: "alicejohnson@example.com",
-    emailVerified: new Date("2024-02-02T00:00:00Z"),
-    password: "password789",
-    role: operatorRole,
-    image: "https://example.com/path/to/alicejohnson.jpg",
-  },
-]
 
 const initRoles = [
   {
@@ -49,33 +26,66 @@ const initRoles = [
   {
     name: userRole,
     description: "User role",
+    baseUrl: "/dashboard/user",
   },
   {
     name: operatorRole,
     description: "Operator role",
+    baseUrl: "/dashboard/product",
   },
 ]
 
-const initRolePermissions = [
+const screen = permissionTypeEnum.enumValues[0]
+const actions = permissionTypeEnum.enumValues[1]
+
+const initScreenPermissions = [
   {
     roleName: adminRole,
+    type: screen,
     pathname: ".*",
     permission: "CRUD",
   },
   {
     roleName: userRole,
-    pathname: "/",
-    permission: "CRUD",
+    type: screen,
+    pathname: "/dashboard/user.*",
   },
   {
     roleName: userRole,
-    pathname: "/user",
-    permission: "CRUD",
+    type: screen,
+    pathname: "/dashboard/product.*",
+  },
+  {
+    roleName: operatorRole,
+    type: screen,
+    pathname: "/dashboard/product",
+  },
+]
+
+const initActionPermissions = [
+  {
+    roleName: adminRole,
+    type: actions,
+    namespace: ".*",
+    operation: ".*",
   },
   {
     roleName: userRole,
-    pathname: "/role",
-    permission: "R",
+    type: actions,
+    namespace: "user",
+    operation: "find.*",
+  },
+  {
+    roleName: userRole,
+    type: actions,
+    namespace: "product",
+    operation: ".*",
+  },
+  {
+    roleName: operatorRole,
+    type: actions,
+    namespace: "product",
+    operation: "find.*",
   },
 ]
 
@@ -97,14 +107,14 @@ async function runSeed() {
   console.log("⏳ Running seed...")
 
   const start = Date.now()
-  await db.delete(users)
-  await db.insert(users).values(initUsers)
+  await seedUsers(30)
 
   await db.delete(roles)
   await db.insert(roles).values(initRoles)
 
   await db.delete(rolePermissions)
-  await db.insert(rolePermissions).values(initRolePermissions)
+  await db.insert(rolePermissions).values(initScreenPermissions)
+  await db.insert(rolePermissions).values(initActionPermissions)
 
   await seedCategories()
   await seedSubcategories()

@@ -3,11 +3,11 @@ import { cva, type VariantProps } from "class-variance-authority"
 
 import { cn } from "@/lib/utils"
 
-const shellVariants = cva("grid items-center gap-8 pb-8 pt-6 md:py-8", {
+const shellVariants = cva("pt-6 md:p-8", {
   variants: {
     variant: {
-      default: "container",
-      sidebar: "",
+      default: "container grid items-center gap-8 pb-8",
+      sidebar: "flex-1 space-y-4 p-4",
       centered: "container flex h-[100dvh] max-w-2xl flex-col justify-center",
       markdown: "container max-w-3xl py-8 md:py-10 lg:py-10",
     },

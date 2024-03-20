@@ -4,10 +4,11 @@ import { env } from "@/env.js"
 import "@/styles/globals.css"
 
 import { siteConfig } from "@/config/site"
+import { getServerSession } from "@/lib/auth"
 import { fontHeading, fontMono, fontSans } from "@/lib/fonts"
 import { cn } from "@/lib/utils"
 import { Toaster } from "@/components/ui/toaster"
-import { ThemeProvider } from "@/components/providers"
+import { Providers } from "@/components/layout/providers"
 import { TailwindIndicator } from "@/components/tailwind-indicator"
 
 export const metadata: Metadata = {
@@ -53,7 +54,10 @@ export const viewport: Viewport = {
   ],
 }
 
-export default function RootLayout({ children }: React.PropsWithChildren) {
+export default async function RootLayout({
+  children,
+}: React.PropsWithChildren) {
+  const session = await getServerSession()
   return (
     <>
       <html lang="en" suppressHydrationWarning>
@@ -66,15 +70,10 @@ export default function RootLayout({ children }: React.PropsWithChildren) {
             fontHeading.variable
           )}
         >
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
+          <Providers session={session}>
             {children}
             <TailwindIndicator />
-          </ThemeProvider>
+          </Providers>
           <Toaster />
         </body>
       </html>

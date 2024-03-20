@@ -7,7 +7,7 @@ import { useForm } from "react-hook-form"
 import { toast } from "sonner"
 import type { z } from "zod"
 
-import { prepareEmailAddressVerification } from "@/lib/actions/auth"
+import { prepareEmailAddressVerification } from "@/lib/actions/public/auth"
 import { showErrorToast } from "@/lib/handle-error"
 import { authSchema } from "@/lib/validations/auth"
 import { Button } from "@/components/ui/button"

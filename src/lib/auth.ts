@@ -1,6 +1,7 @@
 import { db } from "@/db"
-import { rolePermissions, users } from "@/db/schema"
-import { DrizzleAdapter } from "@auth/drizzle-adapter"
+import { rolePermissions, roles, systemUser } from "@/db/schema"
+// Doesn't it work properly with CredentialsProvider
+// import { DrizzleAdapter } from "@auth/drizzle-adapter"
 import { and, eq } from "drizzle-orm"
 import { getServerSession as originalGetServerSession } from "next-auth"
 import type { NextAuthOptions } from "next-auth"
@@ -9,7 +10,7 @@ import CredentialsProvider from "next-auth/providers/credentials"
 import { SignInErrors } from "@/lib/constants"
 
 export const authOptions: NextAuthOptions = {
-  adapter: DrizzleAdapter(db) as any,
+  // adapter: DrizzleAdapter(db) as any,
   providers: [
     CredentialsProvider({
       credentials: {
@@ -24,19 +25,23 @@ export const authOptions: NextAuthOptions = {
         console.log("authorize", credentials)
         const result = await db
           .select()
-          .from(users)
-          .where(and(eq(users.email, credentials!.username)))
+          .from(systemUser)
+          .where(and(eq(systemUser.email, credentials!.username)))
           // .where(and(eq(users.email, credentials!.username), eq(users.password, credentials!.password)))
-          .leftJoin(rolePermissions, eq(users.role, rolePermissions.roleName))
+          .leftJoin(roles, eq(systemUser.role, roles.name))
+          .leftJoin(
+            rolePermissions,
+            eq(systemUser.role, rolePermissions.roleName)
+          )
         if (result.length) {
           await new Promise((resolve) => setTimeout(resolve, 500))
-          const user = result[0].user
+          const user = result[0].systemUser
           const permissions = result.map(({ rolePermission }) => ({
-            pathname: rolePermission?.pathname,
-            permission: rolePermission?.permission,
+            ...rolePermission,
           }))
           return {
             ...user,
+            baseUrl: result[0].role!.baseUrl,
             permissions,
           }
         } else {
@@ -49,17 +54,8 @@ export const authOptions: NextAuthOptions = {
     signIn: "/signin",
   },
   callbacks: {
-    session: ({ session, token }) => {
-      return {
-        ...session,
-        user: {
-          ...session.user,
-          id: token.id,
-        },
-      }
-    },
     jwt: ({ token, user }) => {
-      console.log("callback jwt", token, user)
+      console.log("callback jwt", token)
       if (user) {
         return {
           ...token,
@@ -68,6 +64,17 @@ export const authOptions: NextAuthOptions = {
         }
       }
       return token
+    },
+    session: ({ session, token }) => {
+      console.log("callback session", token)
+      return {
+        ...session,
+        user: {
+          ...token,
+          ...session.user,
+          id: token.id,
+        },
+      }
     },
   },
 }
