@@ -2,7 +2,7 @@ version: "3.7"
 services:
   db:
     container_name: postgres
-    image: postgres:14
+    image: postgres:16
     ports:
       - "5432:5432"
     # Make postgres logs. More information about logging, see official documentation: https://www.postgresql.org/docs/11/runtime-config-logging.html
