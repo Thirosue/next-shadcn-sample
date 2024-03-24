@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form"
 import { toast } from "sonner"
 import type { z } from "zod"
 
-import { resetPassword } from "@/lib/actions/auth"
+import { resetPassword } from "@/lib/actions/public/auth"
 import { showErrorToast } from "@/lib/handle-error"
 import { checkEmailSchema } from "@/lib/validations/auth"
 import { Button } from "@/components/ui/button"

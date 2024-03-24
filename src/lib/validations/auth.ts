@@ -1,3 +1,4 @@
+import { roleEnum } from "@/db/schema"
 import * as z from "zod"
 
 export const authSchema = z.object({
@@ -40,7 +41,7 @@ export const resetPasswordSchema = z
   })
 
 export const userPrivateMetadataSchema = z.object({
-  role: z.enum(["user", "admin", "super_admin"]),
+  role: z.enum(roleEnum.enumValues),
   stripePriceId: z.string().optional().nullable(),
   stripeSubscriptionId: z.string().optional().nullable(),
   stripeCustomerId: z.string().optional().nullable(),

@@ -3,7 +3,9 @@ import { db } from "@/db"
 import {
   categories,
   products,
+  roleEnum,
   subcategories,
+  systemUser,
   type Product,
   type Subcategory,
 } from "@/db/schema"
@@ -13,6 +15,56 @@ import { eq } from "drizzle-orm"
 
 import { productConfig } from "@/config/product"
 import { slugify } from "@/lib/utils"
+
+const adminRole = roleEnum.enumValues[0]
+const userRole = roleEnum.enumValues[1]
+const operatorRole = roleEnum.enumValues[2]
+
+const initUsers = [
+  {
+    id: "user1",
+    name: "John Doe",
+    email: "test@test.com",
+    password: "password123",
+    role: adminRole,
+  },
+  {
+    id: "user2",
+    name: "Jane Smith",
+    email: "janesmith@example.com",
+    password: "password456",
+    role: userRole,
+  },
+  {
+    id: "user3",
+    name: "Alice Johnson",
+    email: "alicejohnson@example.com",
+    password: "password789",
+    role: operatorRole,
+  },
+]
+
+export async function seedUsers(count = 10) {
+  const roles = [adminRole, userRole, operatorRole]
+
+  const data = []
+
+  for (let i = 0; i < count; i++) {
+    data.push({
+      id: createId(),
+      name: faker.person.fullName(),
+      email: faker.internet.email(),
+      password: faker.internet.password(),
+      role: faker.helpers.shuffle(roles)[0],
+    })
+  }
+
+  console.log(`📝 Inserting ${data.length} users`)
+
+  await db.delete(systemUser)
+  await db.insert(systemUser).values(initUsers)
+  await db.insert(systemUser).values(data)
+}
 
 export async function seedCategories() {
   const data = productConfig.categories.map((category) => ({

@@ -5,7 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import type { z } from "zod"
 
-import { attemptEmailAddressVerification } from "@/lib/actions/auth"
+import { attemptEmailAddressVerification } from "@/lib/actions/public/auth"
 import { showErrorToast } from "@/lib/handle-error"
 import { verifyEmailSchema } from "@/lib/validations/auth"
 import { Button } from "@/components/ui/button"

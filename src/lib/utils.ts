@@ -1,4 +1,5 @@
 import { env } from "@/env.js"
+import type { ScreenPermissions } from "@/types"
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 
@@ -104,4 +105,16 @@ export function isMacOs() {
   if (typeof window === "undefined") return false
 
   return window.navigator.userAgent.includes("Mac")
+}
+
+export function checkScreenPermissions(
+  permissions: ScreenPermissions,
+  currentPath: string
+) {
+  return permissions
+    .filter(({ type }) => type === "screen")
+    .some(({ pathname }) => {
+      const regexp = new RegExp(pathname)
+      return regexp.test(currentPath)
+    })
 }

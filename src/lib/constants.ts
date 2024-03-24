@@ -2,6 +2,7 @@ export const unknownError = "An unknown error occurred. Please try again later."
 
 export const redirects = {
   toTop: "/",
+  toDashboard: "/dashboard",
   toLogin: "/signin",
   toSignup: "/signup",
   afterLogin: "/dashboard/stores",

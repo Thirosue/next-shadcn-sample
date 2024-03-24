@@ -21,8 +21,8 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { useConfirm } from "@/components/confirm-provider"
 import { Icons } from "@/components/icons"
+import { useConfirm } from "@/components/layout/confirm-provider"
 import { PasswordInput } from "@/components/password-input"
 
 type Inputs = z.infer<typeof authSchema>
@@ -43,7 +43,8 @@ export function SignInForm() {
   })
 
   async function onSubmit(data: Inputs) {
-    const callbackUrl = searchParams.get("callbackUrl") || redirects.toTop
+    console.log("session status", status)
+    const callbackUrl = searchParams.get("callbackUrl") || redirects.toDashboard
     startSubmit(async () => {
       try {
         const response = await signIn("credentials", {
@@ -63,6 +64,8 @@ export function SignInForm() {
             showErrorToast(response.error)
           }
         } else {
+          console.log("response", response)
+          console.log("callbackUrl", callbackUrl)
           router.push(callbackUrl)
           toast.success("You are now logged.")
         }
