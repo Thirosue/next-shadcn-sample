@@ -13,10 +13,10 @@ file3.ts
 
     const result = parseLintgnore()
 
-    expect(result).toBeInstanceOf(Set)
-    expect(result.size).toBe(3)
-    expect(result.has("file1.ts")).toBe(true)
-    expect(result.has("file2.ts")).toBe(true)
-    expect(result.has("file3.ts")).toBe(true)
+    expect(result).toBeInstanceOf(Array)
+    expect(result.length).toBe(3)
+    expect(result.includes("file1.ts")).toBe(true)
+    expect(result.includes("file2.ts")).toBe(true)
+    expect(result.includes("file3.ts")).toBe(true)
   })
 })

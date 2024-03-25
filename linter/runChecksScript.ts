@@ -9,7 +9,7 @@ const project = new Project()
 let hasError = false
 
 process.argv.slice(2).forEach((file) => {
-  if (!ignoredFiles.has(file)) {
+  if (!ignoredFiles.some((ignoredFile) => file.includes(ignoredFile))) {
     console.log(`Checking ${file}...`)
     const sourceFile = project.addSourceFileAtPath(file)
     const result = runChecks(sourceFile)

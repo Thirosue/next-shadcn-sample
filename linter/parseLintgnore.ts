@@ -6,7 +6,7 @@ const project = new Project({
   tsConfigFilePath: "tsconfig.json",
 })
 
-export function parseLintgnore(): Set<string> {
+export function parseLintgnore(): string[] {
   const lintgnorePath = project.addSourceFileAtPath(
     "src/lib/actions/.lintgnore"
   )
@@ -14,5 +14,5 @@ export function parseLintgnore(): Set<string> {
     .readFileSync(lintgnorePath.getFilePath(), "utf-8")
     .split("\n")
     .filter(Boolean)
-  return new Set(ignoredFiles)
+  return ignoredFiles
 }

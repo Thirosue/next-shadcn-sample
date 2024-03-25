@@ -5,7 +5,7 @@ import { db } from "@/db"
 import { systemUser } from "@/db/schema"
 import { faker } from "@faker-js/faker"
 import { eq } from "drizzle-orm"
-import type { z } from "zod"
+import * as z from "zod"
 
 import { withAuthentication } from "@/lib/actions/authorization-filter"
 import { userSchema } from "@/lib/validations/user"
@@ -53,14 +53,23 @@ async function user_findById(id: string) {
   return user[0]
 }
 
-async function user_upsert(data: z.infer<typeof userSchema>) {
+const userUpsertSchema = userSchema.extend({
+  token: z.string(),
+})
+
+async function user_upsert(data: z.infer<typeof userUpsertSchema>) {
+  noStore()
+
+  // Make the 'token' property optional before deleting it
+  const { token, ...userData } = data
+
   const user = await db
     .insert(systemUser)
     .values({
       id: data.id ?? faker.string.uuid(),
-      ...data,
+      ...userData,
     })
-    .onConflictDoUpdate({ target: systemUser.id, set: { ...data } })
+    .onConflictDoUpdate({ target: systemUser.id, set: { ...userData } })
     .execute()
 
   console.log(`🆕 Upserted user ${data.id}`)

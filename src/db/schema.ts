@@ -9,6 +9,7 @@ import {
   json,
   pgEnum,
   pgTable,
+  primaryKey,
   text,
   timestamp,
   varchar,
@@ -74,6 +75,18 @@ export const permissionTypeEnum = pgEnum("permissionTypeEnum", [
 //  })
 // )
 // auth tables start
+
+export const verificationCsrfTokens = pgTable(
+  "verificationCsrfTokens",
+  {
+    identifier: text("identifier").notNull(),
+    token: text("token").notNull(),
+    expires: timestamp("expires", { mode: "date" }).notNull(),
+  },
+  (vt) => ({
+    compoundKey: primaryKey({ columns: [vt.identifier, vt.token] }),
+  })
+)
 
 export const systemUser = pgTable("systemUser", {
   id: text("id").notNull().primaryKey(),

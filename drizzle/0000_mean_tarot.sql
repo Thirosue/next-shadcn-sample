@@ -85,6 +85,13 @@ CREATE TABLE IF NOT EXISTS "systemUser" (
 	"role" "roleEnum" NOT NULL
 );
 --> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "verificationCsrfTokens" (
+	"identifier" text NOT NULL,
+	"token" text NOT NULL,
+	"expires" timestamp NOT NULL,
+	CONSTRAINT "verificationCsrfTokens_identifier_token_pk" PRIMARY KEY("identifier","token")
+);
+--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "products_store_id_idx" ON "products" ("store_id");--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "products_category_id_idx" ON "products" ("category_id");--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "products_subcategory_id_idx" ON "products" ("subcategory_id");--> statement-breakpoint

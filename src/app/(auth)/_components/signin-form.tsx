@@ -64,8 +64,6 @@ export function SignInForm() {
             showErrorToast(response.error)
           }
         } else {
-          console.log("response", response)
-          console.log("callbackUrl", callbackUrl)
           router.push(callbackUrl)
           toast.success("You are now logged.")
         }
