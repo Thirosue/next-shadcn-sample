@@ -7,7 +7,7 @@ import BreadCrumb from "@/components/breadcrumb"
 import { Shell } from "@/components/shell"
 import { UserForm } from "@/app/(dashboard)/dashboard/user/_components/user-form"
 
-export const breadcrumbItems = [
+const breadcrumbItems = [
   { title: "User", link: "/dashboard/user" },
   { title: "Create", link: "/dashboard/user/create" },
 ]

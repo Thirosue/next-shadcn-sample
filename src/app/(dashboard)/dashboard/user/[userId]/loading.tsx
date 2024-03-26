@@ -1,7 +1,11 @@
 import { Skeleton } from "@/components/ui/skeleton"
 import BreadCrumb from "@/components/breadcrumb"
 import { Shell } from "@/components/shell"
-import { breadcrumbItems } from "@/app/(dashboard)/dashboard/user/[userId]/page"
+
+const breadcrumbItems = [
+  { title: "User", link: "/dashboard/user" },
+  { title: "Create", link: "/dashboard/user/create" },
+]
 
 export default function AccountLoading() {
   return (
