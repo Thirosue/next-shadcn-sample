@@ -8,6 +8,7 @@ import { getServerSession } from "@/lib/auth"
 import { fontHeading, fontMono, fontSans } from "@/lib/fonts"
 import { cn } from "@/lib/utils"
 import { Toaster } from "@/components/ui/toaster"
+import { Analytics } from "@/components/analytics"
 import { Providers } from "@/components/layout/providers"
 import { TailwindIndicator } from "@/components/tailwind-indicator"
 
@@ -73,6 +74,7 @@ export default async function RootLayout({
           <Providers session={session}>
             {children}
             <TailwindIndicator />
+            <Analytics />
           </Providers>
           <Toaster />
         </body>
