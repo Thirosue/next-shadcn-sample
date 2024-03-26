@@ -39,9 +39,10 @@ type FormValues = z.infer<typeof userSchema>
 
 interface UserFormProps {
   initialData: User
+  _csrf: string
 }
 
-export const UserForm: React.FC<UserFormProps> = ({ initialData }) => {
+export const UserForm: React.FC<UserFormProps> = ({ initialData, _csrf }) => {
   const [isSubmitNow, startSubmit] = useTransition()
   const router = useRouter()
   const confirm = useConfirm()
@@ -73,7 +74,10 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData }) => {
           title: "Check Updates",
           description: "Are you sure you want to update this user?",
         }).then(async () => {
-          await upsertWithAuth(data)
+          await upsertWithAuth({
+            ...data,
+            token: _csrf,
+          })
           router.push("/dashboard/user")
           toast.success(toastMessage)
         })
@@ -117,7 +121,6 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData }) => {
                     <Input
                       disabled={isSubmitNow}
                       placeholder="User name"
-                      defaultValue={field.value}
                       {...field}
                     />
                   </FormControl>

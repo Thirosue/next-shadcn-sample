@@ -3,6 +3,8 @@ import { AuthUser } from "@/types"
 
 import { getServerSession } from "@/lib/auth"
 
+import { verifyCsrfTokens } from "./token"
+
 function extractNamespaceAndOperation(functionName: string) {
   const match = functionName.match(/^(.*?)_(.*)$/)
   if (!match) {
@@ -38,6 +40,17 @@ export function withAuthentication(fn: Function) {
       throw new Error("Unauthorized")
     }
     console.log(`🔐 ${functionName} is authenticated`)
+
+    const { namespace, operation } = extractNamespaceAndOperation(functionName)
+    if (["insert", "update", "upsert", "delete"].includes(operation)) {
+      const token = args[0].token
+      console.log(`🆕 ${operation} ${namespace}, token: ${token}`)
+      const isVerified = await verifyCsrfTokens(token)
+      if (!isVerified) {
+        throw new Error("CSRF token is invalid")
+      }
+      console.log(`🔑 ${operation} ${namespace} is verified`)
+    }
 
     // 元の関数を実行
     return await fn(...args)
