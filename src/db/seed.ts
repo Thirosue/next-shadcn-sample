@@ -107,7 +107,7 @@ async function runSeed() {
   console.log("⏳ Running seed...")
 
   const start = Date.now()
-  await seedUsers(30)
+  await seedUsers(11000)
 
   await db.delete(roles)
   await db.insert(roles).values(initRoles)
