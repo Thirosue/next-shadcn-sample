@@ -43,7 +43,6 @@ export function SignInForm() {
   })
 
   async function onSubmit(data: Inputs) {
-    console.log("session status", status)
     const callbackUrl = searchParams.get("callbackUrl") || redirects.toDashboard
     startSubmit(async () => {
       try {

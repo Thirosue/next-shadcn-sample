@@ -14,7 +14,6 @@ import {
 
 export async function resetPassword(data: z.infer<typeof checkEmailSchema>) {
   noStore()
-  console.log(data)
 
   await new Promise((resolve) => setTimeout(resolve, 1000))
 
@@ -25,7 +24,6 @@ export async function attemptFirstFactor(
   data: z.infer<typeof resetPasswordSchema>
 ) {
   noStore()
-  console.log(data)
 
   await new Promise((resolve) => setTimeout(resolve, 1000))
 
@@ -36,7 +34,6 @@ export async function attemptEmailAddressVerification(
   data: z.infer<typeof verifyEmailSchema>
 ) {
   noStore()
-  console.log(data)
 
   await new Promise((resolve) => setTimeout(resolve, 1000))
 
@@ -47,7 +44,6 @@ export async function prepareEmailAddressVerification(
   data: z.infer<typeof authSchema>
 ) {
   noStore()
-  console.log(data)
 
   await new Promise((resolve) => setTimeout(resolve, 1000))
 
