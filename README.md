@@ -8,7 +8,7 @@
 
 ## require
 
-- node.js
+- Node.js
 - docker or vercel postgres
 
 ## Overview

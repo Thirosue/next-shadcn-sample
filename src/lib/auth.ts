@@ -1,7 +1,5 @@
 import { db } from "@/db"
 import { rolePermissions, roles, systemUser } from "@/db/schema"
-// Doesn't it work properly with CredentialsProvider
-// import { DrizzleAdapter } from "@auth/drizzle-adapter"
 import { and, eq } from "drizzle-orm"
 import { getServerSession as originalGetServerSession } from "next-auth"
 import type { NextAuthOptions } from "next-auth"
@@ -10,7 +8,9 @@ import CredentialsProvider from "next-auth/providers/credentials"
 import { SignInErrors } from "@/lib/constants"
 
 export const authOptions: NextAuthOptions = {
+  // Doesn't it work properly with CredentialsProvider
   // adapter: DrizzleAdapter(db) as any,
+  // https://next-auth.js.org/providers/credentials
   providers: [
     CredentialsProvider({
       credentials: {
