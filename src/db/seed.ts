@@ -14,6 +14,8 @@ import {
   seedUsers,
 } from "@/lib/actions/seed"
 
+const captains = console
+
 const adminRole = roleEnum.enumValues[0]
 const userRole = roleEnum.enumValues[1]
 const operatorRole = roleEnum.enumValues[2]
@@ -104,7 +106,7 @@ const storeSample = {
 }
 
 async function runSeed() {
-  console.log("⏳ Running seed...")
+  captains.log("⏳ Running seed...")
 
   const start = Date.now()
   await seedUsers(11000)
@@ -124,13 +126,13 @@ async function runSeed() {
   await seedProducts({ storeId, count: 100 })
 
   const end = Date.now()
-  console.log(`✅ Seed completed in ${end - start}ms`)
+  captains.log(`✅ Seed completed in ${end - start}ms`)
 
   process.exit(0)
 }
 
 runSeed().catch((err) => {
-  console.error("❌ Seed failed")
-  console.error(err)
+  captains.error("❌ Seed failed")
+  captains.error(err)
   process.exit(1)
 })

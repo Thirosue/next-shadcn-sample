@@ -16,6 +16,8 @@ import { eq } from "drizzle-orm"
 import { productConfig } from "@/config/product"
 import { slugify } from "@/lib/utils"
 
+const captains = console
+
 const adminRole = roleEnum.enumValues[0]
 const userRole = roleEnum.enumValues[1]
 const operatorRole = roleEnum.enumValues[2]
@@ -59,7 +61,7 @@ export async function seedUsers(count = 10) {
     })
   }
 
-  console.log(`📝 Inserting ${data.length} users`)
+  captains.log(`📝 Inserting ${data.length} users`)
 
   await db.delete(systemUser)
   await db.insert(systemUser).values(initUsers)
@@ -75,7 +77,7 @@ export async function seedCategories() {
   }))
 
   await db.delete(categories)
-  console.log(`📝 Inserting ${data.length} categories`)
+  captains.log(`📝 Inserting ${data.length} categories`)
   await db.insert(categories).values(data)
 }
 
@@ -111,7 +113,7 @@ export async function seedSubcategories() {
   })
 
   await db.delete(subcategories)
-  console.log(`📝 Inserting ${data.length} subcategories`)
+  captains.log(`📝 Inserting ${data.length} subcategories`)
   await db.insert(subcategories).values(data)
 }
 
@@ -165,7 +167,7 @@ export async function seedProducts({
   }
 
   await db.delete(products).where(eq(products.storeId, storeId))
-  console.log(`📝 Inserting ${data.length} products`)
+  captains.log(`📝 Inserting ${data.length} products`)
   await db.insert(products).values(data)
 }
 
@@ -213,6 +215,6 @@ export async function seedCozyProducts({ storeId }: { storeId: string }) {
   }
 
   await db.delete(products).where(eq(products.storeId, storeId))
-  console.log(`📝 Inserting ${data.length} products`)
+  captains.log(`📝 Inserting ${data.length} products`)
   await db.insert(products).values(data)
 }
