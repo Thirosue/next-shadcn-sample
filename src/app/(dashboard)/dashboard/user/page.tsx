@@ -1,15 +1,17 @@
-import { findAllWithAuth } from "@/lib/actions/users"
+import { setCsrfTokens } from "@/lib/actions/token"
+import { findAllUsersWithAuth } from "@/lib/actions/users"
 import BreadCrumb from "@/components/breadcrumb"
 import { Shell } from "@/components/shell"
 import { UserTable } from "@/app/(dashboard)/dashboard/user/_components/user-table"
 
 export const breadcrumbItems = [{ title: "User", link: "/dashboard/user" }]
 export default async function Page() {
-  const users = await findAllWithAuth(1)
+  const users = await findAllUsersWithAuth(1, 10000)
+  const token = await setCsrfTokens()
   return (
     <Shell variant="sidebar">
       <BreadCrumb items={breadcrumbItems} />
-      <UserTable data={users} />
+      <UserTable data={users} _csrf={token} />
     </Shell>
   )
 }

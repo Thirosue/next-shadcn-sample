@@ -18,7 +18,7 @@ export async function setCsrfTokens() {
     .values({
       identifier: sessionToken,
       token,
-      expires: new Date(Date.now() + 60 * 60 * 1000),
+      expires: new Date(Date.now() + 30 * 60 * 1000), // 30 minutes
     })
     .execute()
   return token
@@ -26,15 +26,13 @@ export async function setCsrfTokens() {
 
 export async function verifyCsrfTokens(token: string) {
   noStore()
-  const cookieStore = cookies()
 
-  const sessionToken = cookieStore.get("next-auth.session-token")?.value!
   const result = await db
     .select({ count: count() })
     .from(verificationCsrfTokens)
     .where(
       and(
-        eq(verificationCsrfTokens.identifier, sessionToken),
+        // eq(verificationCsrfTokens.identifier, sessionToken), do not use identifier as session may be updated
         eq(verificationCsrfTokens.token, token),
         gte(verificationCsrfTokens.expires, new Date(Date.now()))
       )

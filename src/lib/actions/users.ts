@@ -8,6 +8,7 @@ import { eq } from "drizzle-orm"
 import * as z from "zod"
 
 import { withAuthentication } from "@/lib/actions/authorization-filter"
+import { csrfTokenSchema } from "@/lib/validations/auth"
 import { userSchema } from "@/lib/validations/user"
 
 async function user_findAll(page: number, limit: number = 10) {
@@ -53,9 +54,7 @@ async function user_findById(id: string) {
   return user[0]
 }
 
-const userUpsertSchema = userSchema.extend({
-  token: z.string(),
-})
+const userUpsertSchema = userSchema.merge(csrfTokenSchema)
 
 async function user_upsert(data: z.infer<typeof userUpsertSchema>) {
   noStore()
@@ -77,7 +76,24 @@ async function user_upsert(data: z.infer<typeof userUpsertSchema>) {
   return user
 }
 
+const userDeleteSchema = csrfTokenSchema.extend({
+  id: z.string(),
+})
+
+async function user_delete(data: z.infer<typeof userDeleteSchema>) {
+  noStore()
+
+  const user = await db
+    .delete(systemUser)
+    .where(eq(systemUser.id, data.id))
+    .returning()
+
+  console.log(`🆕 Delete user ${data.id}`)
+  return user
+}
+
 // 高階関数を適用した認証付きの関数
-export const findAllWithAuth = withAuthentication(user_findAll)
-export const findByIdWithAuth = withAuthentication(user_findById)
-export const upsertWithAuth = withAuthentication(user_upsert)
+export const findAllUsersWithAuth = withAuthentication(user_findAll)
+export const findUserByIdWithAuth = withAuthentication(user_findById)
+export const upsertUserWithAuth = withAuthentication(user_upsert)
+export const deleteUserWithAuth = withAuthentication(user_delete)
