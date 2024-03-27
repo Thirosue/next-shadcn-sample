@@ -2,6 +2,7 @@ import { use } from "react"
 import { AuthUser } from "@/types"
 
 import { getServerSession } from "@/lib/auth"
+import { logMessage } from "@/lib/logger"
 
 import { verifyCsrfTokens } from "./token"
 
@@ -24,7 +25,9 @@ function authorization(user: AuthUser, functionName: string) {
         new RegExp(entry.operation!).test(operation)
     )
 
-  console.log(user, namespace, operation)
+  logMessage({
+    message: `Authorization: ${user.id} ${namespace} ${operation}`,
+  })
   return !permissionEntry
 }
 
@@ -39,17 +42,17 @@ export function withAuthentication(fn: Function) {
     if (authorization(session.user as AuthUser, functionName)) {
       throw new Error("Unauthorized")
     }
-    console.log(`🔐 ${functionName} is authenticated`)
+    logMessage({ message: `🔐 ${functionName} is authenticated` })
 
     const { namespace, operation } = extractNamespaceAndOperation(functionName)
     if (["insert", "update", "upsert", "delete"].includes(operation)) {
       const token = args[0].token
-      console.log(`🆕 ${operation} ${namespace}, token: ${token}`)
+      logMessage({ message: `🆕 ${operation} ${namespace}, token: ${token}` })
       const isVerified = await verifyCsrfTokens(token)
       if (!isVerified) {
         throw new Error("CSRF token is invalid")
       }
-      console.log(`🔑 ${operation} ${namespace} is verified`)
+      logMessage({ message: `🔑 ${operation} ${namespace} is verified` })
     }
 
     // 元の関数を実行

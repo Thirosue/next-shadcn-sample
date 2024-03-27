@@ -8,6 +8,7 @@ import { eq } from "drizzle-orm"
 import * as z from "zod"
 
 import { withAuthentication } from "@/lib/actions/authorization-filter"
+import { logMessage } from "@/lib/logger"
 import { csrfTokenSchema } from "@/lib/validations/auth"
 import { userSchema } from "@/lib/validations/user"
 
@@ -29,7 +30,7 @@ async function user_findAll(page: number, limit: number = 10) {
 
   await new Promise((resolve) => setTimeout(resolve, 1000))
 
-  console.log(`🔍 Found ${users.length} users`)
+  logMessage({ message: `🔍 Found ${users.length} users` })
   return users
 }
 
@@ -49,8 +50,7 @@ async function user_findById(id: string) {
 
   await new Promise((resolve) => setTimeout(resolve, 1000))
 
-  console.log(`🔍 Found user ${id}`)
-  console.log(user)
+  logMessage({ message: `🔍 Found user ${id}` })
   return user[0]
 }
 
@@ -71,8 +71,7 @@ async function user_upsert(data: z.infer<typeof userUpsertSchema>) {
     .onConflictDoUpdate({ target: systemUser.id, set: { ...userData } })
     .execute()
 
-  console.log(`🆕 Upserted user ${data.id}`)
-  console.log(user)
+  logMessage({ message: `🆕 Upserted user ${data.id}` })
   return user
 }
 
@@ -88,7 +87,7 @@ async function user_delete(data: z.infer<typeof userDeleteSchema>) {
     .where(eq(systemUser.id, data.id))
     .returning()
 
-  console.log(`🆕 Delete user ${data.id}`)
+  logMessage({ message: `🆕 Delete user ${data.id}` })
   return user
 }
 

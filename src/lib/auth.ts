@@ -6,6 +6,7 @@ import type { NextAuthOptions } from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
 
 import { SignInErrors } from "@/lib/constants"
+import { logMessage } from "@/lib/logger"
 
 export const authOptions: NextAuthOptions = {
   // Doesn't it work properly with CredentialsProvider
@@ -22,7 +23,7 @@ export const authOptions: NextAuthOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials, req) {
-        console.log("authorize", credentials)
+        logMessage({ message: "authorize", object: credentials })
         const result = await db
           .select()
           .from(systemUser)
@@ -55,7 +56,7 @@ export const authOptions: NextAuthOptions = {
   },
   callbacks: {
     jwt: ({ token, user }) => {
-      console.log("callback jwt", token)
+      logMessage({ message: "callback jwt", object: token })
       if (user) {
         return {
           ...token,
@@ -66,7 +67,7 @@ export const authOptions: NextAuthOptions = {
       return token
     },
     session: ({ session, token }) => {
-      console.log("callback session", token)
+      logMessage({ message: "callback session", object: token })
       return {
         ...session,
         user: {
