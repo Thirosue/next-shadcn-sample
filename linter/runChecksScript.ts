@@ -1,7 +1,5 @@
 import { Project } from "ts-morph"
 
-import { logMessage } from "@/lib/logger"
-
 import { runChecks } from "./check"
 import { parseLintgnore } from "./parseLintgnore"
 

@@ -1,4 +1,3 @@
-import { use } from "react"
 import { AuthUser } from "@/types"
 
 import { getServerSession } from "@/lib/auth"
