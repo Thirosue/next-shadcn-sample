@@ -8,14 +8,16 @@ import { parseLintgnore } from "./parseLintgnore"
 const ignoredFiles = parseLintgnore()
 const project = new Project()
 
+const captains = console
+
 let hasError = false
 
 process.argv.slice(2).forEach((file) => {
   if (!ignoredFiles.some((ignoredFile) => file.includes(ignoredFile))) {
-    logMessage({ message: `Checking ${file}...` })
+    captains.log(`Checking ${file}...`)
     const sourceFile = project.addSourceFileAtPath(file)
     const result = runChecks(sourceFile)
-    logMessage({ message: `${file}: ${result}` })
+    captains.log(`${file}: ${result}`)
     if (!result) {
       hasError = true
     }
