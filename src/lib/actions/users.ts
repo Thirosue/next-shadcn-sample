@@ -4,13 +4,13 @@ import { unstable_noStore as noStore } from "next/cache"
 import { db } from "@/db"
 import { systemUser } from "@/db/schema"
 import { faker } from "@faker-js/faker"
-import { eq } from "drizzle-orm"
+import { and, eq } from "drizzle-orm"
 import * as z from "zod"
 
 import { withAuthentication } from "@/lib/actions/authorization-filter"
 import { logMessage } from "@/lib/logger"
 import { csrfTokenSchema } from "@/lib/validations/auth"
-import { userSchema } from "@/lib/validations/user"
+import { userUpsertSchema } from "@/lib/validations/user"
 
 async function user_findAll(page: number, limit: number = 10) {
   noStore()
@@ -43,6 +43,7 @@ async function user_findById(id: string) {
       password: systemUser.password,
       email: systemUser.email,
       role: systemUser.role,
+      version: systemUser.version,
     })
     .from(systemUser)
     .where(eq(systemUser.id, id))
@@ -54,25 +55,44 @@ async function user_findById(id: string) {
   return user[0]
 }
 
-const userUpsertSchema = userSchema.merge(csrfTokenSchema)
-
 async function user_upsert(data: z.infer<typeof userUpsertSchema>) {
   noStore()
 
   // Make the 'token' property optional before deleting it
   const { token, ...userData } = data
 
-  const user = await db
-    .insert(systemUser)
-    .values({
-      id: data.id ?? faker.string.uuid(),
-      ...userData,
-    })
-    .onConflictDoUpdate({ target: systemUser.id, set: { ...userData } })
-    .execute()
+  if (data.version) {
+    const user = await db
+      .update(systemUser)
+      .set({
+        ...userData,
+        updatedBy: "system",
+        version: data.version + 1,
+      })
+      .where(
+        and(eq(systemUser.id, data.id!), eq(systemUser.version, data.version))
+      )
+      .returning({ updatedId: systemUser.id })
+    if (user.length === 0) {
+      throw new Error(
+        "The user has been updated by another user. Please refresh the page."
+      )
+    }
+    logMessage({ message: `🆕 Update user ${data.id}` })
+  } else {
+    const user = await db
+      .insert(systemUser)
+      .values({
+        id: faker.string.uuid(),
+        ...userData,
+        createdAt: new Date(),
+        createdBy: "system",
+      })
+      .execute()
+    logMessage({ message: `🆕 Insert user ${data.id}` })
+  }
 
-  logMessage({ message: `🆕 Upserted user ${data.id}` })
-  return user
+  return data
 }
 
 const userDeleteSchema = csrfTokenSchema.extend({

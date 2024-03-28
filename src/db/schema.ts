@@ -39,12 +39,22 @@ export const systemUser = pgTable("systemUser", {
   email: text("email").notNull(),
   password: text("password").notNull(),
   role: roleEnum("role").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  createdBy: varchar("created_by", { length: 256 }).notNull(),
+  updatedAt: timestamp("updated_at").default(sql`current_timestamp`),
+  updatedBy: varchar("updated_by", { length: 256 }),
+  version: integer("version").default(1).notNull(),
 })
 
 export const roles = pgTable("role", {
   name: roleEnum("role").notNull().primaryKey(),
   description: varchar("description", { length: 256 }),
   baseUrl: varchar("base_url", { length: 256 }),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  createdBy: varchar("created_by", { length: 256 }).notNull(),
+  updatedAt: timestamp("updated_at").default(sql`current_timestamp`),
+  updatedBy: varchar("updated_by", { length: 256 }),
+  version: integer("version").default(1).notNull(),
 })
 
 export const rolePermissions = pgTable("rolePermission", {
@@ -58,6 +68,11 @@ export const rolePermissions = pgTable("rolePermission", {
   namespace: varchar("namespace", { length: 256 }), // 画面 or 操作の名前
   operation: varchar("operation", { length: 64 }), // 操作の種類
   pathname: varchar("pathname", { length: 256 }), // 操作を行う画面
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  createdBy: varchar("created_by", { length: 256 }).notNull(),
+  updatedAt: timestamp("updated_at").default(sql`current_timestamp`),
+  updatedBy: varchar("updated_by", { length: 256 }),
+  version: integer("version").default(1).notNull(),
 })
 
 // Domain specific tables
@@ -69,7 +84,10 @@ export const categories = pgTable("categories", {
   slug: varchar("slug", { length: 256 }).unique().notNull(),
   description: text("description"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
+  createdBy: varchar("created_by", { length: 256 }).notNull(),
   updatedAt: timestamp("updated_at").default(sql`current_timestamp`),
+  updatedBy: varchar("updated_by", { length: 256 }),
+  version: integer("version").default(1).notNull(),
 })
 
 export const categoriesRelations = relations(categories, ({ many }) => ({
@@ -93,7 +111,10 @@ export const subcategories = pgTable(
       .references(() => categories.id, { onDelete: "cascade" })
       .notNull(),
     createdAt: timestamp("created_at").defaultNow().notNull(),
+    createdBy: varchar("created_by", { length: 256 }).notNull(),
     updatedAt: timestamp("updated_at").default(sql`current_timestamp`),
+    updatedBy: varchar("updated_by", { length: 256 }),
+    version: integer("version").default(1).notNull(),
   },
   (table) => ({
     subcategoriesCategoryIdIdx: index(`subcategories_category_id_idx`).on(
@@ -123,7 +144,10 @@ export const stores = pgTable("stores", {
   active: boolean("active").notNull().default(false),
   stripeAccountId: varchar("stripe_account_id"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
+  createdBy: varchar("created_by", { length: 256 }).notNull(),
   updatedAt: timestamp("updated_at").default(sql`current_timestamp`),
+  updatedBy: varchar("updated_by", { length: 256 }),
+  version: integer("version").default(1).notNull(),
 })
 
 export const storesRelations = relations(stores, ({ many }) => ({
@@ -155,7 +179,10 @@ export const products = pgTable(
       .references(() => stores.id, { onDelete: "cascade" })
       .notNull(),
     createdAt: timestamp("created_at").defaultNow().notNull(),
+    createdBy: varchar("created_by", { length: 256 }).notNull(),
     updatedAt: timestamp("updated_at").default(sql`current_timestamp`),
+    updatedBy: varchar("updated_by", { length: 256 }),
+    version: integer("version").default(1).notNull(),
   },
   (table) => ({
     storeIdIdx: index(`products_store_id_idx`).on(table.storeId),

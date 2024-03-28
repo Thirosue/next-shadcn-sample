@@ -12,7 +12,7 @@ import * as z from "zod"
 
 import { deleteUserWithAuth, upsertUserWithAuth } from "@/lib/actions/users"
 import { showErrorToast } from "@/lib/handle-error"
-import { userSchema } from "@/lib/validations/user"
+import { userUpsertSchema } from "@/lib/validations/user"
 import { Button } from "@/components/ui/button"
 import {
   Form,
@@ -35,10 +35,12 @@ import { Separator } from "@/components/ui/separator"
 import { useConfirm } from "@/components/layout/confirm-provider"
 import { PasswordInput } from "@/components/password-input"
 
-type FormValues = z.infer<typeof userSchema>
+type FormValues = z.infer<typeof userUpsertSchema>
 
 interface UserFormProps {
-  initialData: User
+  initialData: User & {
+    version?: number
+  }
   _csrf: string
 }
 
@@ -61,9 +63,10 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData, _csrf }) => {
       }
 
   const form = useForm<FormValues>({
-    resolver: zodResolver(userSchema),
+    resolver: zodResolver(userUpsertSchema),
     defaultValues: {
       ...defaultValues,
+      token: _csrf,
     },
   })
 
@@ -74,10 +77,7 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData, _csrf }) => {
           title: "Check Updates",
           description: "Are you sure you want to update this user?",
         }).then(async () => {
-          await upsertUserWithAuth({
-            ...data,
-            token: _csrf,
-          })
+          await upsertUserWithAuth(data)
           router.push("/dashboard/user")
           toast.success(toastMessage)
         })
@@ -206,6 +206,31 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData, _csrf }) => {
                       ))}
                     </SelectContent>
                   </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            {/* Hidden System Control field _csrf and version */}
+            <FormField
+              control={form.control}
+              name="token"
+              render={({ field }) => (
+                <FormItem hidden>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="version"
+              render={({ field }) => (
+                <FormItem hidden>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
