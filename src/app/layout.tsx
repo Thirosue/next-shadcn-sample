@@ -76,7 +76,7 @@ export default async function RootLayout({
             <TailwindIndicator />
             <Analytics />
           </Providers>
-          <Toaster />
+          <Toaster richColors />
         </body>
       </html>
     </>

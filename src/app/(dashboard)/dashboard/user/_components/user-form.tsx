@@ -3,7 +3,7 @@
 import { useTransition } from "react"
 import { useRouter } from "next/navigation"
 import { roleEnum } from "@/db/schema"
-import { User } from "@/types"
+import { ActionResult, User } from "@/types"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Trash } from "lucide-react"
 import { useForm } from "react-hook-form"
@@ -77,12 +77,27 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData, _csrf }) => {
           title: "Check Updates",
           description: "Are you sure you want to update this user?",
         }).then(async () => {
-          await upsertUserWithAuth(data)
-          router.push("/dashboard/user")
-          toast.success(toastMessage)
+          const result = (await upsertUserWithAuth(data)) as ActionResult
+          if (result.status === 200) {
+            router.push("/dashboard/user")
+            toast.success(toastMessage)
+          } else if (result.status === 409) {
+            toast.error(result.message, {
+              action: {
+                label: "Go back",
+                onClick: () => {
+                  router.push("/dashboard/user")
+                },
+              },
+            })
+          } else {
+            toast.error(result.message)
+            router.push("/error")
+          }
         })
       } catch (err) {
         showErrorToast(err)
+        router.push("/error")
       }
     })
   }

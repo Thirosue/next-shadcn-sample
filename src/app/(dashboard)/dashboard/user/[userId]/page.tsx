@@ -19,14 +19,14 @@ interface UserPageProps {
 }
 
 export default async function Page({ params }: UserPageProps) {
-  const user = await findUserByIdWithAuth(params.userId)
+  const { data } = await findUserByIdWithAuth(params.userId)
   const token = await setCsrfTokens()
 
   return (
     <ScrollArea className="h-full">
       <Shell variant="sidebar">
         <BreadCrumb items={breadcrumbItems} />
-        <UserForm initialData={user} _csrf={token} key={null} />
+        <UserForm initialData={data} _csrf={token} key={null} />
       </Shell>
     </ScrollArea>
   )

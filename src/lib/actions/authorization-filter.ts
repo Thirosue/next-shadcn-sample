@@ -34,12 +34,18 @@ export function withAuthentication(fn: Function) {
   return async function (...args: any[]) {
     const session = await getServerSession()
     if (!session?.user) {
-      throw new Error("Unauthorized")
+      return {
+        status: 401,
+        message: "Unauthorized",
+      }
     }
 
     const functionName = fn.name
     if (authorization(session.user as AuthUser, functionName)) {
-      throw new Error("Unauthorized")
+      return {
+        status: 403,
+        message: "Forbidden",
+      }
     }
     logMessage({ message: `🔐 ${functionName} is authenticated` })
 
@@ -49,7 +55,10 @@ export function withAuthentication(fn: Function) {
       logMessage({ message: `🆕 ${operation} ${namespace}, token: ${token}` })
       const isVerified = await verifyCsrfTokens(token)
       if (!isVerified) {
-        throw new Error("CSRF token is invalid")
+        return {
+          status: 403,
+          message: "CSRF token is invalid",
+        }
       }
       logMessage({ message: `🔑 ${operation} ${namespace} is verified` })
     }

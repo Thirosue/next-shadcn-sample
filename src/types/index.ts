@@ -69,3 +69,9 @@ export type ScreenPermissions = {
   type: (typeof permissionTypeEnum.enumValues)[number]
   pathname: string
 }[]
+
+export type ActionResult = {
+  status: number
+  message?: string
+  data?: any
+}

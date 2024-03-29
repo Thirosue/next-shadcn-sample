@@ -3,6 +3,7 @@
 import { unstable_noStore as noStore } from "next/cache"
 import { db } from "@/db"
 import { systemUser } from "@/db/schema"
+import { ActionResult } from "@/types"
 import { faker } from "@faker-js/faker"
 import { and, eq } from "drizzle-orm"
 import * as z from "zod"
@@ -12,7 +13,10 @@ import { logMessage } from "@/lib/logger"
 import { csrfTokenSchema } from "@/lib/validations/auth"
 import { userUpsertSchema } from "@/lib/validations/user"
 
-async function user_findAll(page: number, limit: number = 10) {
+async function user_findAll(
+  page: number,
+  limit: number = 10
+): Promise<ActionResult> {
   noStore()
   const offset = (page - 1) * limit
   const users = await db
@@ -31,10 +35,13 @@ async function user_findAll(page: number, limit: number = 10) {
   await new Promise((resolve) => setTimeout(resolve, 1000))
 
   logMessage({ message: `🔍 Found ${users.length} users` })
-  return users
+  return {
+    status: 200,
+    data: users,
+  }
 }
 
-async function user_findById(id: string) {
+async function user_findById(id: string): Promise<ActionResult> {
   noStore()
   const user = await db
     .select({
@@ -52,10 +59,15 @@ async function user_findById(id: string) {
   await new Promise((resolve) => setTimeout(resolve, 1000))
 
   logMessage({ message: `🔍 Found user ${id}` })
-  return user[0]
+  return {
+    status: 200,
+    data: user[0],
+  }
 }
 
-async function user_upsert(data: z.infer<typeof userUpsertSchema>) {
+async function user_upsert(
+  data: z.infer<typeof userUpsertSchema>
+): Promise<ActionResult> {
   noStore()
 
   // Make the 'token' property optional before deleting it
@@ -74,9 +86,11 @@ async function user_upsert(data: z.infer<typeof userUpsertSchema>) {
       )
       .returning({ updatedId: systemUser.id })
     if (user.length === 0) {
-      throw new Error(
-        "The user has been updated by another user. Please refresh the page."
-      )
+      return {
+        status: 409,
+        message:
+          "The user has been updated by another user. Please refresh the page.",
+      }
     }
     logMessage({ message: `🆕 Update user ${data.id}` })
   } else {
@@ -92,7 +106,9 @@ async function user_upsert(data: z.infer<typeof userUpsertSchema>) {
     logMessage({ message: `🆕 Insert user ${data.id}` })
   }
 
-  return data
+  return {
+    status: 200,
+  }
 }
 
 const userDeleteSchema = csrfTokenSchema.extend({
@@ -108,7 +124,9 @@ async function user_delete(data: z.infer<typeof userDeleteSchema>) {
     .returning()
 
   logMessage({ message: `🆕 Delete user ${data.id}` })
-  return user
+  return {
+    status: 200,
+  }
 }
 
 // 高階関数を適用した認証付きの関数
