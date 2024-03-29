@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import { useRouter } from "next/navigation"
-import { User } from "@/types"
+import { User, UserSearchFormValues } from "@/types"
 import { Plus } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -11,15 +11,21 @@ import { Heading } from "@/components/ui/heading"
 import { Separator } from "@/components/ui/separator"
 
 import { columns } from "./columns"
+import { UserSearchForm } from "./user-search-form"
 
 const CsrfTokenContext = React.createContext("")
 
-interface ProductsClientProps {
+interface UserTableProps {
   data: User[]
+  searchParams: UserSearchFormValues
   _csrf: string
 }
 
-export const UserTable: React.FC<ProductsClientProps> = ({ data, _csrf }) => {
+export const UserTable: React.FC<UserTableProps> = ({
+  data,
+  searchParams,
+  _csrf,
+}) => {
   const router = useRouter()
 
   return (
@@ -37,6 +43,8 @@ export const UserTable: React.FC<ProductsClientProps> = ({ data, _csrf }) => {
             <Plus className="mr-2 h-4 w-4" /> Add New
           </Button>
         </div>
+        <Separator />
+        <UserSearchForm searchParams={searchParams} />
         <Separator />
         <DataTable searchKey="name" columns={columns} data={data} />
       </CsrfTokenContext.Provider>
