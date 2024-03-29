@@ -6,12 +6,12 @@ import { UserTable } from "@/app/(dashboard)/dashboard/user/_components/user-tab
 
 export const breadcrumbItems = [{ title: "User", link: "/dashboard/user" }]
 export default async function Page() {
-  const users = await findAllUsersWithAuth(1, 10000)
+  const { data } = await findAllUsersWithAuth(1, 10000)
   const token = await setCsrfTokens()
   return (
     <Shell variant="sidebar">
       <BreadCrumb items={breadcrumbItems} />
-      <UserTable data={users} _csrf={token} />
+      <UserTable data={data} _csrf={token} />
     </Shell>
   )
 }
