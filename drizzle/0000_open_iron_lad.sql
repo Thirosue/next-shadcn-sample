@@ -16,7 +16,10 @@ CREATE TABLE IF NOT EXISTS "categories" (
 	"slug" varchar(256) NOT NULL,
 	"description" text,
 	"created_at" timestamp DEFAULT now() NOT NULL,
+	"created_by" varchar(256) NOT NULL,
 	"updated_at" timestamp DEFAULT current_timestamp,
+	"updated_by" varchar(256),
+	"version" integer DEFAULT 1 NOT NULL,
 	CONSTRAINT "categories_name_unique" UNIQUE("name"),
 	CONSTRAINT "categories_slug_unique" UNIQUE("slug")
 );
@@ -34,7 +37,10 @@ CREATE TABLE IF NOT EXISTS "products" (
 	"tags" json DEFAULT 'null'::json,
 	"store_id" varchar(30) NOT NULL,
 	"created_at" timestamp DEFAULT now() NOT NULL,
-	"updated_at" timestamp DEFAULT current_timestamp
+	"created_by" varchar(256) NOT NULL,
+	"updated_at" timestamp DEFAULT current_timestamp,
+	"updated_by" varchar(256),
+	"version" integer DEFAULT 1 NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "rolePermission" (
@@ -43,13 +49,23 @@ CREATE TABLE IF NOT EXISTS "rolePermission" (
 	"type" "permissionTypeEnum" NOT NULL,
 	"namespace" varchar(256),
 	"operation" varchar(64),
-	"pathname" varchar(256)
+	"pathname" varchar(256),
+	"created_at" timestamp DEFAULT now() NOT NULL,
+	"created_by" varchar(256) NOT NULL,
+	"updated_at" timestamp DEFAULT current_timestamp,
+	"updated_by" varchar(256),
+	"version" integer DEFAULT 1 NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "role" (
 	"role" "roleEnum" PRIMARY KEY NOT NULL,
 	"description" varchar(256),
-	"base_url" varchar(256)
+	"base_url" varchar(256),
+	"created_at" timestamp DEFAULT now() NOT NULL,
+	"created_by" varchar(256) NOT NULL,
+	"updated_at" timestamp DEFAULT current_timestamp,
+	"updated_by" varchar(256),
+	"version" integer DEFAULT 1 NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "stores" (
@@ -61,7 +77,10 @@ CREATE TABLE IF NOT EXISTS "stores" (
 	"active" boolean DEFAULT false NOT NULL,
 	"stripe_account_id" varchar,
 	"created_at" timestamp DEFAULT now() NOT NULL,
+	"created_by" varchar(256) NOT NULL,
 	"updated_at" timestamp DEFAULT current_timestamp,
+	"updated_by" varchar(256),
+	"version" integer DEFAULT 1 NOT NULL,
 	CONSTRAINT "stores_slug_unique" UNIQUE("slug")
 );
 --> statement-breakpoint
@@ -72,7 +91,10 @@ CREATE TABLE IF NOT EXISTS "subcategories" (
 	"description" text,
 	"category_id" varchar(30) NOT NULL,
 	"created_at" timestamp DEFAULT now() NOT NULL,
+	"created_by" varchar(256) NOT NULL,
 	"updated_at" timestamp DEFAULT current_timestamp,
+	"updated_by" varchar(256),
+	"version" integer DEFAULT 1 NOT NULL,
 	CONSTRAINT "subcategories_name_unique" UNIQUE("name"),
 	CONSTRAINT "subcategories_slug_unique" UNIQUE("slug")
 );
@@ -82,7 +104,12 @@ CREATE TABLE IF NOT EXISTS "systemUser" (
 	"name" text NOT NULL,
 	"email" text NOT NULL,
 	"password" text NOT NULL,
-	"role" "roleEnum" NOT NULL
+	"role" "roleEnum" NOT NULL,
+	"created_at" timestamp DEFAULT now() NOT NULL,
+	"created_by" varchar(256) NOT NULL,
+	"updated_at" timestamp DEFAULT current_timestamp,
+	"updated_by" varchar(256),
+	"version" integer DEFAULT 1 NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "verificationCsrfTokens" (

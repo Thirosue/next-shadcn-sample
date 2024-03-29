@@ -11,6 +11,7 @@ import {
 } from "@/db/schema"
 import { createId } from "@/db/utils"
 import { faker } from "@faker-js/faker"
+import { set } from "date-fns"
 import { eq } from "drizzle-orm"
 
 import { productConfig } from "@/config/product"
@@ -46,6 +47,14 @@ const initUsers = [
   },
 ]
 
+export function setSystemControl(list: any[]) {
+  return list.map((item) => ({
+    ...item,
+    createdAt: new Date(),
+    createdBy: "system",
+  }))
+}
+
 export async function seedUsers(count = 10) {
   const roles = [adminRole, userRole, operatorRole]
 
@@ -64,8 +73,8 @@ export async function seedUsers(count = 10) {
   captains.log(`📝 Inserting ${data.length} users`)
 
   await db.delete(systemUser)
-  await db.insert(systemUser).values(initUsers)
-  await db.insert(systemUser).values(data)
+  await db.insert(systemUser).values(setSystemControl(initUsers))
+  await db.insert(systemUser).values(setSystemControl(data))
 }
 
 export async function seedCategories() {
@@ -78,7 +87,7 @@ export async function seedCategories() {
 
   await db.delete(categories)
   captains.log(`📝 Inserting ${data.length} categories`)
-  await db.insert(categories).values(data)
+  await db.insert(categories).values(setSystemControl(data))
 }
 
 export async function seedSubcategories() {
@@ -105,16 +114,14 @@ export async function seedSubcategories() {
           slug: slugify(subcategory.name),
           categoryId: category.id,
           description: subcategory.description,
-          updatedAt: new Date(),
-          createdAt: new Date(),
-        })
+        } as any)
       })
     }
   })
 
   await db.delete(subcategories)
   captains.log(`📝 Inserting ${data.length} subcategories`)
-  await db.insert(subcategories).values(data)
+  await db.insert(subcategories).values(setSystemControl(data))
 }
 
 export async function seedProducts({
@@ -161,14 +168,12 @@ export async function seedProducts({
       inventory: faker.number.int({ min: 50, max: 100 }),
       rating: faker.number.int({ min: 0, max: 5 }),
       tags: productConfig.tags.slice(0, faker.number.float({ min: 0, max: 5 })),
-      createdAt: faker.date.past(),
-      updatedAt: faker.date.past(),
-    })
+    } as any)
   }
 
   await db.delete(products).where(eq(products.storeId, storeId))
   captains.log(`📝 Inserting ${data.length} products`)
-  await db.insert(products).values(data)
+  await db.insert(products).values(setSystemControl(data))
 }
 
 export async function seedCozyProducts({ storeId }: { storeId: string }) {
@@ -209,12 +214,10 @@ export async function seedCozyProducts({ storeId }: { storeId: string }) {
       inventory: product.inventory,
       rating: product.rating,
       tags: product.tags,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    })
+    } as any)
   }
 
   await db.delete(products).where(eq(products.storeId, storeId))
   captains.log(`📝 Inserting ${data.length} products`)
-  await db.insert(products).values(data)
+  await db.insert(products).values(setSystemControl(data))
 }

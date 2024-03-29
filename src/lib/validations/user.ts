@@ -2,6 +2,7 @@ import { roleEnum } from "@/db/schema"
 import * as z from "zod"
 
 import { authSchema } from "./auth"
+import { updateSchema } from "./system"
 
 export const userSchema = authSchema.extend({
   id: z.string().optional(),
@@ -13,3 +14,5 @@ export const userSchema = authSchema.extend({
   }),
   role: z.enum(roleEnum.enumValues),
 })
+
+export const userUpsertSchema = userSchema.merge(updateSchema)

@@ -12,6 +12,7 @@ import {
   seedProducts,
   seedSubcategories,
   seedUsers,
+  setSystemControl,
 } from "@/lib/actions/seed"
 
 const captains = console
@@ -93,36 +94,40 @@ const initActionPermissions = [
 
 const storeId = "store1"
 
-const storeSample = {
-  id: storeId,
-  user_id: "user1",
-  name: "Sample Store",
-  description: "This is a sample store for demonstration.",
-  slug: "sample-store",
-  active: true,
-  stripe_account_id: "acct_abcdef",
-  created_at: new Date(),
-  updated_at: new Date(),
-}
+const storeSample = [
+  {
+    id: storeId,
+    user_id: "user1",
+    name: "Sample Store",
+    description: "This is a sample store for demonstration.",
+    slug: "sample-store",
+    active: true,
+    stripe_account_id: "acct_abcdef",
+  },
+]
 
 async function runSeed() {
   captains.log("⏳ Running seed...")
 
   const start = Date.now()
-  await seedUsers(11000)
+  await seedUsers(5100)
 
   await db.delete(roles)
-  await db.insert(roles).values(initRoles)
+  await db.insert(roles).values(setSystemControl(initRoles))
 
   await db.delete(rolePermissions)
-  await db.insert(rolePermissions).values(initScreenPermissions)
-  await db.insert(rolePermissions).values(initActionPermissions)
+  await db
+    .insert(rolePermissions)
+    .values(setSystemControl(initScreenPermissions))
+  await db
+    .insert(rolePermissions)
+    .values(setSystemControl(initActionPermissions))
 
   await seedCategories()
   await seedSubcategories()
 
   await db.delete(stores)
-  await db.insert(stores).values(storeSample)
+  await db.insert(stores).values(setSystemControl(storeSample))
   await seedProducts({ storeId, count: 100 })
 
   const end = Date.now()
