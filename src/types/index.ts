@@ -48,6 +48,12 @@ export type MainNavItem = NavItemWithOptionalChildren
 
 export type SidebarNavItem = NavItemWithChildren
 
+export type UserSearchFormValues = {
+  name?: string
+  email?: string
+  role?: UserRole
+}
+
 export type User = {
   id: string
   name: string

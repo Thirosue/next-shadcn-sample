@@ -3,9 +3,9 @@
 import { unstable_noStore as noStore } from "next/cache"
 import { db } from "@/db"
 import { systemUser } from "@/db/schema"
-import { ActionResult } from "@/types"
+import { ActionResult, UserSearchFormValues } from "@/types"
 import { faker } from "@faker-js/faker"
-import { and, eq } from "drizzle-orm"
+import { and, eq, like } from "drizzle-orm"
 import * as z from "zod"
 
 import { withAuthentication } from "@/lib/actions/authorization-filter"
@@ -15,9 +15,24 @@ import { userUpsertSchema } from "@/lib/validations/user"
 
 async function user_findAll(
   page: number,
-  limit: number = 10
+  limit: number = 10,
+  searchParams: UserSearchFormValues
 ): Promise<ActionResult> {
   noStore()
+  const conditions = []
+
+  if (searchParams.role) {
+    conditions.push(eq(systemUser.role, searchParams.role))
+  }
+  if (searchParams.email) {
+    conditions.push(like(systemUser.email, `%${searchParams.email}%`))
+  }
+  if (searchParams.name) {
+    conditions.push(like(systemUser.name, `%${searchParams.name}%`))
+  }
+
+  const whereCondition = conditions.length > 0 ? and(...conditions) : undefined
+
   const offset = (page - 1) * limit
   const users = await db
     .select({
@@ -27,6 +42,7 @@ async function user_findAll(
       role: systemUser.role,
     })
     .from(systemUser)
+    .where(whereCondition)
     .limit(limit)
     .offset(offset)
     .orderBy(systemUser.id)
