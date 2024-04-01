@@ -22,18 +22,18 @@ export type Employee = {
 export const navItems: NavItem[] = [
   {
     title: "Dashboard",
-    href: "/dashboard",
+    href: "/dashboard/home",
     icon: "dashboard",
     label: "Dashboard",
   },
   {
-    title: "User",
+    title: "User (client-side pagination)",
     href: "/dashboard/user",
     icon: "user",
     label: "user",
   },
   {
-    title: "Product",
+    title: "Product (server-side pagination)",
     href: "/dashboard/product",
     icon: "barcode",
     label: "product",

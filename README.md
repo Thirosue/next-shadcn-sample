@@ -32,7 +32,7 @@ This is a starter template using the following stack:
 | Pages                                                                             | Specifications                                                                                        |
 | :-------------------------------------------------------------------------------- | :---------------------------------------------------------------------------------------------------- |
 | [Signup](https://next-shadcn-dashboard-starter.vercel.app/)                       | Authentication with **NextAuth** supports Social logins and email logins(Enter dummy email for demo). |
-| [Dashboard](https://next-shadcn-dashboard-starter.vercel.app/dashboard)           | Cards with recharts graphs for analytics.                                                             |
+| [Dashboard](https://next-shadcn-dashboard-starter.vercel.app/dashboard/home)           | Cards with recharts graphs for analytics.                                                             |
 | [Users](https://next-shadcn-dashboard-starter.vercel.app/dashboard/user)          | Tanstack tables with user details client side searching, pagination etc                               |
 | [Users/new](https://next-shadcn-dashboard-starter.vercel.app/dashboard/user/new)  | A User Form.                                                                                          |
 | [Not Found](https://next-shadcn-dashboard-starter.vercel.app/dashboard/notfound)  | Not Found Page Added in the root level                                                                |
