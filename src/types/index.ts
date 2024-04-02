@@ -48,11 +48,36 @@ export type MainNavItem = NavItemWithOptionalChildren
 
 export type SidebarNavItem = NavItemWithChildren
 
+type PageSearchFormValues = {
+  page?: number
+  limit?: number
+}
+
 export type UserSearchFormValues = {
   name?: string
   email?: string
   role?: UserRole
 }
+
+export const ProductStatuses = [
+  "new",
+  "sale",
+  "bestseller",
+  "featured",
+  "popular",
+  "trending",
+  "limited",
+  "exclusive",
+] as const
+
+type ProductStatus = (typeof ProductStatuses)[number]
+
+export type ProductSearchFormValues = {
+  name?: string
+  tags?: ProductStatus[]
+  price_from?: number
+  price_to?: number
+} & PageSearchFormValues
 
 export type User = {
   id: string
@@ -78,6 +103,7 @@ export type ScreenPermissions = {
 
 export type ActionResult = {
   status: number
+  totalCount?: number
   message?: string
   data?: any
 }

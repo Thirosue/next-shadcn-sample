@@ -22,7 +22,7 @@ export default function Page() {
             Go back
           </Button>
           <Button
-            onClick={() => router.push("/dashboard")}
+            onClick={() => router.push("/dashboard/home")}
             variant="ghost"
             size="lg"
           >

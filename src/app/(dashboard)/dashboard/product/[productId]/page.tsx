@@ -6,8 +6,8 @@ import { ProductForm } from "@/app/(dashboard)/dashboard/product/_components/pro
 
 export default function Page() {
   const breadcrumbItems = [
-    { title: "Employee", link: "/dashboard/employee" },
-    { title: "Create", link: "/dashboard/employee/create" },
+    { title: "Product", link: "/dashboard/product" },
+    { title: "Create", link: "/dashboard/product/new" },
   ]
   return (
     <Shell variant="sidebar">
