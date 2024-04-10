@@ -5,7 +5,7 @@ import { db } from "@/db"
 import { products } from "@/db/schema"
 import { ActionResult, ProductSearchFormValues } from "@/types"
 import { faker } from "@faker-js/faker"
-import { and, count, eq, like } from "drizzle-orm"
+import { and, asc, count, desc, like } from "drizzle-orm"
 import * as z from "zod"
 
 import { withAuthentication } from "@/lib/actions/authorization-filter"
@@ -20,6 +20,7 @@ async function product_findAll(
 ): Promise<ActionResult> {
   noStore()
   const conditions = []
+  let sortBy = asc(products.name)
 
   if (searchParams.name) {
     conditions.push(like(products.name, `%${searchParams.name}%`))
@@ -27,6 +28,25 @@ async function product_findAll(
   if (searchParams.tags?.length) {
     for (const tag of searchParams.tags) {
       conditions.push(like(products.tags, `%${tag}%`))
+    }
+  }
+
+  if (searchParams.sort) {
+    const [sortField, sortOrder] = searchParams.sort.split(":")
+    switch (sortField) {
+      case "name":
+        sortBy = sortOrder === "asc" ? asc(products.name) : desc(products.name)
+        break
+      case "category":
+        sortBy =
+          sortOrder === "asc"
+            ? asc(products.categoryId)
+            : desc(products.categoryId)
+        break
+      case "price":
+        sortBy =
+          sortOrder === "asc" ? asc(products.price) : desc(products.price)
+        break
     }
   }
 
@@ -46,7 +66,7 @@ async function product_findAll(
     .where(whereCondition)
     .limit(limit)
     .offset(offset)
-    .orderBy(products.id)
+    .orderBy(sortBy)
     .execute()
 
   // 総結果数を取得
@@ -55,8 +75,6 @@ async function product_findAll(
     .from(products)
     .where(whereCondition)
     .execute()
-
-  await new Promise((resolve) => setTimeout(resolve, 1000))
 
   logMessage({ message: `🔍 Found ${data.length} products` })
   return {

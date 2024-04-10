@@ -11,6 +11,7 @@ import { Heading } from "@/components/ui/heading"
 import {
   PageableTable,
   PageableTableProps,
+  parseSortQueryParam,
 } from "@/components/ui/pageable-table"
 import { Separator } from "@/components/ui/separator"
 
@@ -53,6 +54,7 @@ export function ProductTable<TData, TValue>({
         columns={columns}
         totalCount={totalCount}
         data={data}
+        initailSort={parseSortQueryParam(searchParams.sort)}
         pageCount={pageCount}
       />
     </>
