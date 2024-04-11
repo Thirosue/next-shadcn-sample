@@ -30,6 +30,7 @@ export const columns: ColumnDef<Product>[] = [
   {
     accessorKey: "store",
     header: "STORE",
+    enableSorting: false,
   },
   {
     accessorKey: "name",
@@ -42,10 +43,12 @@ export const columns: ColumnDef<Product>[] = [
   {
     accessorKey: "price",
     header: "PRICE",
+    sortDescFirst: true, // This column will sort in descending order first (default for number columns anyway)
   },
   {
     accessorKey: "tags",
     header: "TAGS",
+    enableSorting: false,
   },
   {
     id: "actions",

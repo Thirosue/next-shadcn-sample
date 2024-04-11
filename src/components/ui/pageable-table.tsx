@@ -2,9 +2,12 @@
 
 import React from "react"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
+import { PageSearchFormValues } from "@/types"
 import {
   DoubleArrowLeftIcon,
   DoubleArrowRightIcon,
+  TriangleDownIcon,
+  TriangleUpIcon,
 } from "@radix-ui/react-icons"
 import {
   ColumnDef,
@@ -12,7 +15,9 @@ import {
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
+  getSortedRowModel,
   PaginationState,
+  SortingState,
   useReactTable,
 } from "@tanstack/react-table"
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react"
@@ -35,11 +40,23 @@ import {
   TableRow,
 } from "@/components/ui/table"
 
+export function parseSortQueryParam(query: string | undefined) {
+  if (!query) {
+    return []
+  }
+  const decoded = decodeURIComponent(query)
+  const [field, order] = decoded.split(":")
+
+  const isDesc = order === "desc"
+  return [{ id: field, desc: isDesc }]
+}
+
 export interface PageableTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
   pageNo: number
   pageSizeOptions?: number[]
+  initailSort?: SortingState
   pageCount: number
   totalCount: number
 }
@@ -49,6 +66,7 @@ export function PageableTable<TData, TValue>({
   data,
   pageNo,
   totalCount,
+  initailSort = [],
   pageCount,
   pageSizeOptions = [10, 20, 30, 40, 50],
 }: PageableTableProps<TData, TValue>) {
@@ -73,7 +91,7 @@ export function PageableTable<TData, TValue>({
       const newSearchParams = new URLSearchParams(searchParams?.toString())
 
       for (const [key, value] of Object.entries(params)) {
-        if (value === null) {
+        if (!value) {
           newSearchParams.delete(key)
         } else {
           newSearchParams.set(key, String(value))
@@ -92,19 +110,25 @@ export function PageableTable<TData, TValue>({
       pageSize: fallbackPerPage,
     })
 
-  React.useEffect(() => {
-    router.push(
-      `${pathname}?${createQueryString({
-        page: pageIndex + 1,
-        limit: pageSize,
-      })}`,
-      {
-        scroll: false,
-      }
-    )
+  const [sorting, setSorting] = React.useState<SortingState>(initailSort)
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pageIndex, pageSize])
+  React.useEffect(() => {
+    const queryObject = {
+      page: pageIndex + 1,
+      limit: pageSize,
+      sort: undefined,
+    } as PageSearchFormValues
+
+    if (sorting && sorting.length > 0) {
+      queryObject.sort = sorting
+        .map((sort) => `${sort.id}:${sort.desc ? "desc" : "asc"}`)
+        .join(",")
+    }
+
+    const queryString = createQueryString(queryObject)
+
+    router.push(`${pathname}?${queryString}`, { scroll: false })
+  }, [sorting, pageIndex, pageSize])
 
   const table = useReactTable({
     data,
@@ -114,9 +138,12 @@ export function PageableTable<TData, TValue>({
     getFilteredRowModel: getFilteredRowModel(),
     state: {
       pagination: { pageIndex, pageSize },
+      sorting,
     },
     onPaginationChange: setPagination,
+    onSortingChange: setSorting,
     getPaginationRowModel: getPaginationRowModel(),
+    getSortedRowModel: getSortedRowModel(),
     manualPagination: true,
     manualFiltering: true,
   })
@@ -134,12 +161,21 @@ export function PageableTable<TData, TValue>({
                 {headerGroup.headers.map((header) => {
                   return (
                     <TableHead key={header.id}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
+                      <div
+                        className="flex items-center"
+                        onClick={header.column.getToggleSortingHandler()}
+                      >
+                        {header.isPlaceholder
+                          ? null
+                          : flexRender(
+                              header.column.columnDef.header,
+                              header.getContext()
+                            )}
+                        {{
+                          asc: <TriangleUpIcon />,
+                          desc: <TriangleDownIcon />,
+                        }[header.column.getIsSorted() as string] ?? null}
+                      </div>
                     </TableHead>
                   )
                 })}

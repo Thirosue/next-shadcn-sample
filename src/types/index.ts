@@ -48,9 +48,12 @@ export type MainNavItem = NavItemWithOptionalChildren
 
 export type SidebarNavItem = NavItemWithChildren
 
-type PageSearchFormValues = {
+export type SortOrder = "asc" | "desc"
+
+export type PageSearchFormValues = {
   page?: number
   limit?: number
+  sort?: string
 }
 
 export type UserSearchFormValues = {
