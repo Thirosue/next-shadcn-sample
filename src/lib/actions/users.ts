@@ -1,6 +1,7 @@
 "use server"
 
 import { unstable_noStore as noStore } from "next/cache"
+import { redirect } from "next/navigation"
 import { db } from "@/db"
 import { systemUser } from "@/db/schema"
 import { ActionResult, UserSearchFormValues } from "@/types"
@@ -83,7 +84,7 @@ async function user_findById(id: string): Promise<ActionResult> {
 
 async function user_upsert(
   data: z.infer<typeof userUpsertSchema>
-): Promise<ActionResult> {
+): Promise<ActionResult | void> {
   noStore()
 
   // Make the 'token' property optional before deleting it
@@ -122,9 +123,7 @@ async function user_upsert(
     logMessage({ message: `🆕 Insert user ${data.id}` })
   }
 
-  return {
-    status: 200,
-  }
+  redirect("/dashboard/user")
 }
 
 const userDeleteSchema = csrfTokenSchema.extend({
