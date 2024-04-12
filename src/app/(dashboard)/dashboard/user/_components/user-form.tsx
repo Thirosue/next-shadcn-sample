@@ -77,11 +77,12 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData, _csrf }) => {
           title: "Check Updates",
           description: "Are you sure you want to update this user?",
         }).then(async () => {
-          const result = (await upsertUserWithAuth(data)) as ActionResult
-          if (result.status === 200) {
-            router.push("/dashboard/user")
+          const result = (await upsertUserWithAuth(data)) as ActionResult | void
+          if (!result) {
             toast.success(toastMessage)
-          } else if (result.status === 409) {
+            return
+          }
+          if (result.status === 409) {
             toast.error(result.message, {
               action: {
                 label: "Go back",
