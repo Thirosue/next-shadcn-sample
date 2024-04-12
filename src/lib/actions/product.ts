@@ -76,6 +76,8 @@ async function product_findAll(
     .where(whereCondition)
     .execute()
 
+  await new Promise((resolve) => setTimeout(resolve, 1000))
+
   logMessage({ message: `🔍 Found ${data.length} products` })
   return {
     status: 200,

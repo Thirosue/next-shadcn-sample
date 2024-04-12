@@ -143,9 +143,9 @@ export function PageableTable<TData, TValue>({
     onPaginationChange: setPagination,
     onSortingChange: setSorting,
     getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
     manualPagination: true,
     manualFiltering: true,
+    manualSorting: true, //use pre-sorted row model instead of sorted row model
   })
 
   const startRow = pageIndex * pageSize + 1
