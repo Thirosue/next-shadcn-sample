@@ -1,4 +1,4 @@
-import { useRouter } from "next/navigation"
+import { usePathname } from "next/navigation"
 import { ProductSearchFormValues, ProductStatuses } from "@/types"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
@@ -22,13 +22,6 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
 
 const productSearchFormSchema = z.object({
   name: z.string().optional(),
@@ -55,12 +48,10 @@ export function ProductSearchForm({
     },
   })
 
-  const router = useRouter()
+  const pathname = usePathname()
 
   const onSubmit = (data: FormValues) => {
-    router.push(
-      `/dashboard/product?name=${data.name}&page=1&limit=${searchParams.limit}`
-    )
+    window.location.href = `${pathname}?name=${data.name}&page=1&limit=${searchParams.limit}`
   }
 
   return (
