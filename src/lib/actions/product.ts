@@ -1,10 +1,9 @@
 "use server"
 
-import { unstable_noStore as noStore } from "next/cache"
+import { unstable_noStore as noStore, revalidateTag } from "next/cache"
 import { db } from "@/db"
 import { products } from "@/db/schema"
 import { ActionResult, ProductSearchFormValues } from "@/types"
-import { faker } from "@faker-js/faker"
 import { and, asc, count, desc, like } from "drizzle-orm"
 import * as z from "zod"
 
@@ -76,7 +75,8 @@ async function product_findAll(
     .where(whereCondition)
     .execute()
 
-  await new Promise((resolve) => setTimeout(resolve, 1000))
+  await new Promise((resolve) => setTimeout(resolve, 300))
+  revalidateTag("product")
 
   logMessage({ message: `🔍 Found ${data.length} products` })
   return {

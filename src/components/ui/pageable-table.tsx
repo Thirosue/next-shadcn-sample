@@ -15,7 +15,6 @@ import {
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
-  getSortedRowModel,
   PaginationState,
   SortingState,
   useReactTable,
@@ -126,8 +125,11 @@ export function PageableTable<TData, TValue>({
     }
 
     const queryString = createQueryString(queryObject)
+    const newUrl = `${pathname}?${queryString}`
 
-    router.push(`${pathname}?${queryString}`, { scroll: false })
+    if (`${window.location.pathname}${window.location.search}` !== newUrl) {
+      router.push(`${pathname}?${queryString}`, { scroll: false })
+    }
   }, [sorting, pageIndex, pageSize])
 
   const table = useReactTable({

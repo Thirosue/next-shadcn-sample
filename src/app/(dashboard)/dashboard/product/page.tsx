@@ -11,6 +11,8 @@ export const breadcrumbItems = [
   { title: "Product", link: "/dashboard/product" },
 ]
 
+export const dynamic = "force-dynamic"
+
 export default async function Page({
   searchParams,
 }: {
