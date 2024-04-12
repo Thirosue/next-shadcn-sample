@@ -7,7 +7,7 @@ const breadcrumbItems = [
   { title: "Create", link: "/dashboard/user/create" },
 ]
 
-export default function AccountLoading() {
+export default function Loading() {
   return (
     <Shell variant="sidebar">
       <BreadCrumb items={breadcrumbItems} />

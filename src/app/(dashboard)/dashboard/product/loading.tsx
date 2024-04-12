@@ -3,7 +3,7 @@ import BreadCrumb from "@/components/breadcrumb"
 import { Shell } from "@/components/shell"
 import { breadcrumbItems } from "@/app/(dashboard)/dashboard/product/page"
 
-export default function AccountLoading() {
+export default function Loading() {
   return (
     <Shell variant="sidebar">
       <BreadCrumb items={breadcrumbItems} />
