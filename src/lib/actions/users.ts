@@ -1,6 +1,6 @@
 "use server"
 
-import { unstable_noStore as noStore } from "next/cache"
+import { unstable_noStore as noStore, revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
 import { db } from "@/db"
 import { systemUser } from "@/db/schema"
@@ -123,6 +123,8 @@ async function user_upsert(
     logMessage({ message: `🆕 Insert user ${data.id}` })
   }
 
+  // refs #34 After submitting the form, redirect and invalidate the cache
+  revalidatePath("/dashboard/user")
   redirect("/dashboard/user")
 }
 
