@@ -27,16 +27,16 @@ export const navItems: NavItem[] = [
     label: "user",
   },
   {
-    title: "Product (server-side pagination)",
-    href: "/dashboard/product",
+    title: "Product (server-side pagination use server actions)",
+    href: "/dashboard/product?page=1&limit=10",
     icon: "barcode",
     label: "product",
   },
   {
-    title: "Profile",
-    href: "/dashboard/profile",
-    icon: "profile",
-    label: "profile",
+    title: "Product (server-side pagination use api with hono)",
+    href: "/dashboard/product2?page=1&limit=10",
+    icon: "barcode",
+    label: "product2",
   },
   {
     title: "SignOut",
