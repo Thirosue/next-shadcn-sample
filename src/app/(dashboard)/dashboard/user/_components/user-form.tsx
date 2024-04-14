@@ -1,6 +1,5 @@
 "use client"
 
-import { useTransition } from "react"
 import { useRouter } from "next/navigation"
 import { roleEnum } from "@/db/schema"
 import { ActionResult, User } from "@/types"
@@ -45,7 +44,6 @@ interface UserFormProps {
 }
 
 export const UserForm: React.FC<UserFormProps> = ({ initialData, _csrf }) => {
-  const [isSubmitNow, startSubmit] = useTransition()
   const router = useRouter()
   const confirm = useConfirm()
 
@@ -71,55 +69,51 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData, _csrf }) => {
   })
 
   const onSubmit = async (data: FormValues) => {
-    startSubmit(async () => {
-      try {
-        confirm({
-          title: "Check Updates",
-          description: "Are you sure you want to update this user?",
-        }).then(async () => {
-          const result = (await upsertUserWithAuth(data)) as ActionResult | void
-          if (!result) {
-            toast.success(toastMessage)
-            return
-          }
-          if (result.status === 409) {
-            toast.error(result.message, {
-              action: {
-                label: "Go back",
-                onClick: () => {
-                  router.push("/dashboard/user")
-                },
+    try {
+      confirm({
+        title: "Check Updates",
+        description: "Are you sure you want to update this user?",
+      }).then(async () => {
+        const result = (await upsertUserWithAuth(data)) as ActionResult | void
+        if (!result) {
+          toast.success(toastMessage)
+          return
+        }
+        if (result.status === 409) {
+          toast.error(result.message, {
+            action: {
+              label: "Go back",
+              onClick: () => {
+                router.push("/dashboard/user")
               },
-            })
-          } else {
-            toast.error(result.message)
-            router.push("/error")
-          }
-        })
-      } catch (err) {
-        showErrorToast(err)
-        router.push("/error")
-      }
-    })
+            },
+          })
+        } else {
+          toast.error(result.message)
+          router.push("/error")
+        }
+      })
+    } catch (err) {
+      showErrorToast(err)
+      router.push("/error")
+    }
   }
 
   const onDelete = async () => {
-    startSubmit(async () => {
-      try {
-        confirm({
-          title: "Check Delete",
-          description: "Are you sure you want to delete this user?",
-        }).then(async () => {
-          await deleteUserWithAuth({
-            id: initialData.id,
-            token: _csrf,
-          })
-          toast.success(toastMessage)
+    try {
+      confirm({
+        title: "Check Delete",
+        description: "Are you sure you want to delete this user?",
+      }).then(async () => {
+        await deleteUserWithAuth({
+          id: initialData.id,
+          token: _csrf,
         })
-      } catch (err) {
-        showErrorToast(err)
-      }
-    })
+        toast.success(toastMessage)
+      })
+    } catch (err) {
+      showErrorToast(err)
+    }
   }
 
   return (
@@ -127,12 +121,7 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData, _csrf }) => {
       <div className="flex items-center justify-between">
         <Heading title={title} description={description} />
         {initialData && (
-          <Button
-            disabled={isSubmitNow}
-            variant="destructive"
-            size="sm"
-            onClick={onDelete}
-          >
+          <Button variant="destructive" size="sm" onClick={onDelete}>
             <Trash className="h-4 w-4" />
           </Button>
         )}
@@ -151,11 +140,7 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData, _csrf }) => {
                 <FormItem>
                   <FormLabel>Name</FormLabel>
                   <FormControl>
-                    <Input
-                      disabled={isSubmitNow}
-                      placeholder="User name"
-                      {...field}
-                    />
+                    <Input placeholder="User name" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -182,7 +167,6 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData, _csrf }) => {
                   <FormLabel>Email</FormLabel>
                   <FormControl>
                     <Input
-                      disabled={isSubmitNow}
                       type="text"
                       placeholder="rodneymullen180@gmail.com"
                       autoComplete="username"
@@ -200,7 +184,6 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData, _csrf }) => {
                 <FormItem>
                   <FormLabel>Role</FormLabel>
                   <Select
-                    disabled={isSubmitNow}
                     onValueChange={field.onChange}
                     value={field.value}
                     defaultValue={field.value}
@@ -251,7 +234,7 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData, _csrf }) => {
               )}
             />
           </div>
-          <Button disabled={isSubmitNow} className="ml-auto" type="submit">
+          <Button className="ml-auto" type="submit">
             {action}
           </Button>
         </form>
