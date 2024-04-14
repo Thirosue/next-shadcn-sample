@@ -1,8 +1,8 @@
 "use client"
 
 import { useState } from "react"
-import { useParams, useRouter } from "next/navigation"
-import { Employee } from "@/constants/data"
+import { useRouter } from "next/navigation"
+import { Product } from "@/constants/data"
 import { Edit, MoreHorizontal, Trash } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -16,7 +16,7 @@ import {
 import { AlertModal } from "@/components/modal/alert-modal"
 
 interface CellActionProps {
-  data: Employee
+  data: Product
 }
 
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
@@ -45,7 +45,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
           <DropdownMenuItem
-            onClick={() => router.push(`/dashboard/user/${data.id}`)}
+            onClick={() => router.push(`/dashboard/product/${data.id}`)}
           >
             <Edit className="mr-2 h-4 w-4" /> Update
           </DropdownMenuItem>
