@@ -1,4 +1,4 @@
-import { useRouter } from "next/navigation"
+import { usePathname } from "next/navigation"
 import { ProductSearchFormValues, ProductStatuses } from "@/types"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
@@ -48,12 +48,10 @@ export function ProductSearchForm({
     },
   })
 
-  const router = useRouter()
+  const pathname = usePathname()
 
   const onSubmit = (data: FormValues) => {
-    router.push(
-      `/dashboard/product?name=${data.name}&page=1&limit=${searchParams.limit}`
-    )
+    window.location.href = `${pathname}?name=${data.name}&page=1&limit=${searchParams.limit}`
   }
 
   return (
