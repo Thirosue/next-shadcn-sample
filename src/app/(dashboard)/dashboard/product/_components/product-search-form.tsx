@@ -51,7 +51,10 @@ export function ProductSearchForm({
   const pathname = usePathname()
 
   const onSubmit = (data: FormValues) => {
-    window.location.href = `${pathname}?name=${data.name}&page=1&limit=${searchParams.limit}`
+    window.location.href = `${pathname}?name=${data.name}&page=1&limit=${searchParams.limit}` // TODO #72 Redirect to new URL
+    // router.push(
+    //   `${pathname}?name=${data.name}&page=1&limit=${searchParams.limit}`
+    // )
   }
 
   return (

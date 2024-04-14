@@ -9,12 +9,12 @@ import { cn } from "@/lib/utils"
 import { buttonVariants } from "@/components/ui/button"
 import { Heading } from "@/components/ui/heading"
 import {
-  PageableTable,
   PageableTableProps,
   parseSortQueryParam,
 } from "@/components/ui/pageable-table"
 import { Separator } from "@/components/ui/separator"
 
+import { PageableTable } from "./pageable-table"
 import { ProductSearchForm } from "./product-search-form"
 
 interface ProductTableProps<TData, TValue>

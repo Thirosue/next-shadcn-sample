@@ -128,7 +128,8 @@ export function PageableTable<TData, TValue>({
     const newUrl = `${pathname}?${queryString}`
 
     if (`${window.location.pathname}${window.location.search}` !== newUrl) {
-      window.location.href = `${pathname}?${queryString}` // Redirect to new URL
+      window.location.href = `${pathname}?${queryString}` // TODO #72 Redirect to new URL
+      // router.push(`${pathname}?${queryString}`, { scroll: false })
     }
   }, [sorting, pageIndex, pageSize])
 
