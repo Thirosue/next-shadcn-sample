@@ -3,14 +3,14 @@ import { NavItem } from "@/types"
 export type Product = {
   id: string
   name: string
-  description: string | null
-  categoryId: string
-  subcategoryId: string | null
-  price: number
-  inventory: number
-  rating: number
+  description?: string | null
+  categoryId?: string
+  subcategoryId?: string | null
+  price: string
+  inventory?: number
+  rating?: number
   tags: any | null
-  storeId: string
+  store: string
 }
 
 export const navItems: NavItem[] = [
