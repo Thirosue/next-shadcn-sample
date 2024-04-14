@@ -114,7 +114,6 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData, _csrf }) => {
             id: initialData.id,
             token: _csrf,
           })
-          router.push("/dashboard/user")
           toast.success(toastMessage)
         })
       } catch (err) {

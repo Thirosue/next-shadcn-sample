@@ -141,9 +141,10 @@ async function user_delete(data: z.infer<typeof userDeleteSchema>) {
     .returning()
 
   logMessage({ message: `🆕 Delete user ${data.id}` })
-  return {
-    status: 200,
-  }
+
+  // refs #34 After submitting the form, redirect and invalidate the cache
+  revalidatePath("/dashboard/user")
+  redirect("/dashboard/user")
 }
 
 // 高階関数を適用した認証付きの関数
