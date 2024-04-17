@@ -60,7 +60,7 @@
     "embla-carousel-react": "^8.0.0",
     "hono": "^4.2.3",
     "install": "^0.13.0",
-    "lucide-react": "^0.368.0",
+    "lucide-react": "^0.370.0",
     "nanoid": "^5.0.6",
     "next": "14.2.1",
     "next-auth": "^4.24.7",
