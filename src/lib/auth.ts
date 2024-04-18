@@ -78,26 +78,6 @@ export const authOptions: NextAuthOptions = {
       }
     },
   },
-  cookies: {
-    sessionToken: {
-      name: `next-auth.session-token`,
-      options: {
-        path: "/",
-      },
-    },
-    callbackUrl: {
-      name: `next-auth.callback-url`,
-      options: {
-        path: "/",
-      },
-    },
-    csrfToken: {
-      name: `next-auth.csrf-token`,
-      options: {
-        path: "/",
-      },
-    },
-  },
 }
 
 export const getServerSession = async () => {
