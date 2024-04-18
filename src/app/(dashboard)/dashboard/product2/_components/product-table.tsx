@@ -1,9 +1,10 @@
 "use client"
 
-import React, { useEffect, useRef, useState } from "react"
+import React from "react"
 import Link from "next/link"
 import { Product } from "@/constants/data"
 import { ProductSearchFormValues } from "@/types"
+import { useQuery } from "@tanstack/react-query"
 import type { InferResponseType } from "hono/client"
 import { hc } from "hono/client"
 import { Plus } from "lucide-react"
@@ -32,52 +33,28 @@ export function ProductTable({ searchParams }: ProductTableProps) {
   const products = client.api.products
   type ResType = InferResponseType<typeof products.$get>
 
-  const [data, setData] = useState<ResType>({
-    data: [],
-    totalCount: 0,
+  const { isPending, error, data } = useQuery({
+    queryKey: ["products", searchParams],
+    queryFn: () =>
+      products
+        .$get({
+          query: {
+            page: searchParams.page!.toString(),
+            limit: searchParams.limit!.toString(),
+            name: searchParams.name,
+            sort: searchParams.sort,
+          },
+        })
+        .then((res) => res.json()),
   })
-  const [loading, setLoading] = useState(true)
 
-  function useDeepCompareEffect(
-    callback: React.EffectCallback,
-    dependencies: any
-  ) {
-    const currentDepsRef = useRef()
-
-    if (
-      JSON.stringify(dependencies) !== JSON.stringify(currentDepsRef.current)
-    ) {
-      currentDepsRef.current = dependencies
-    }
-
-    useEffect(callback, [currentDepsRef.current])
-  }
-
-  useDeepCompareEffect(() => {
-    const fetchData = async () => {
-      setLoading(true)
-      const res = await products.$get({
-        query: {
-          page: searchParams.page!.toString(),
-          limit: searchParams.limit!.toString(),
-          name: searchParams.name,
-          sort: searchParams.sort,
-        },
-      })
-      setData(await res.json())
-      setLoading(false)
-    }
-
-    fetchData()
-  }, [searchParams])
-
-  const pageCount = Math.ceil(data.totalCount / searchParams.limit!)
+  if (error) return "An error has occurred: " + error.message
 
   return (
     <>
       <div className="flex items-start justify-between">
         <Heading
-          title={`Products (${data.totalCount})`}
+          title={`Products (${data ? data.totalCount : 0})`}
           description="Manage products (Server side table functionalities.)"
         />
 
@@ -91,16 +68,16 @@ export function ProductTable({ searchParams }: ProductTableProps) {
       <Separator />
       <ProductSearchForm searchParams={searchParams} />
       <Separator />
-      {loading ? (
+      {isPending ? (
         <Skeleton className="h-[calc(65vh-220px)] rounded-md border" />
       ) : (
         <PageableTable
           pageNo={searchParams.page!}
           columns={columns}
-          totalCount={data.totalCount}
-          data={data.data as Product[]}
+          totalCount={data!.totalCount}
+          data={data!.data as Product[]}
           initailSort={parseSortQueryParam(searchParams.sort)}
-          pageCount={pageCount}
+          pageCount={Math.ceil(data!.totalCount / searchParams.limit!)}
         />
       )}
     </>

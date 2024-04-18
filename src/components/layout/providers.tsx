@@ -1,11 +1,14 @@
 "use client"
 
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { SessionProvider, SessionProviderProps } from "next-auth/react"
 
 import { TooltipProvider } from "@/components/ui/tooltip"
 import { ConfirmProvider } from "@/components/layout/confirm-provider"
 
 import ThemeProvider from "./ThemeToggle/theme-provider"
+
+const queryClient = new QueryClient()
 
 export function Providers({
   session,
@@ -22,9 +25,11 @@ export function Providers({
       disableTransitionOnChange
     >
       <SessionProvider session={session}>
-        <TooltipProvider>
-          <ConfirmProvider>{children}</ConfirmProvider>
-        </TooltipProvider>
+        <QueryClientProvider client={queryClient}>
+          <TooltipProvider>
+            <ConfirmProvider>{children}</ConfirmProvider>
+          </TooltipProvider>
+        </QueryClientProvider>
       </SessionProvider>
     </ThemeProvider>
   )
