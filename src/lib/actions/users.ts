@@ -166,10 +166,12 @@ export async function user_delete(data: z.infer<typeof userDeleteSchema>) {
     }
   }
 
-  const user = await db
-    .delete(systemUser)
-    .where(eq(systemUser.id, data.id))
-    .returning()
+  if (data.id !== "user1") {
+    const user = await db
+      .delete(systemUser)
+      .where(eq(systemUser.id, data.id))
+      .returning()
+  }
 
   logMessage({ message: `🆕 Delete user ${data.id}` })
 
