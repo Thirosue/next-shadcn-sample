@@ -11,7 +11,9 @@ export async function setCsrfTokens() {
   noStore()
   const cookieStore = cookies()
 
-  const sessionToken = cookieStore.get("next-auth.session-token")?.value!
+  const sessionToken = cookieStore.get(
+    `__Secure-next-auth.session-token`
+  )?.value!
   const token = faker.string.uuid()
   await db
     .insert(verificationCsrfTokens)
@@ -28,7 +30,9 @@ export async function verifyCsrfTokens(token: string) {
   noStore()
   const cookieStore = cookies()
 
-  const sessionToken = cookieStore.get("next-auth.session-token")?.value!
+  const sessionToken = cookieStore.get(
+    `__Secure-next-auth.session-token`
+  )?.value!
   const result = await db
     .select({ count: count() })
     .from(verificationCsrfTokens)
