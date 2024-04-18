@@ -3,13 +3,11 @@ import type { ScreenPermissions } from "@/types"
 import { withAuth } from "next-auth/middleware"
 
 import { redirects } from "@/lib/constants"
-import { logMessage } from "@/lib/logger"
 import { checkScreenPermissions } from "@/lib/utils"
 
 export default withAuth(
   // `withAuth` augments your `Request` with the user's token.
   function middleware(req) {
-    logMessage({ message: "custom middleware", object: req.nextauth.token })
     const currentPath = req.nextUrl.pathname
     const url = new URL(req.nextUrl.origin)
 
