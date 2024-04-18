@@ -85,7 +85,7 @@ export async function product_findAll(
     .where(whereCondition)
     .execute()
 
-  await new Promise((resolve) => setTimeout(resolve, 1500))
+  await new Promise((resolve) => setTimeout(resolve, 500))
   revalidateTag("product")
 
   logMessage({ message: `🔍 Found ${data.length} products` })

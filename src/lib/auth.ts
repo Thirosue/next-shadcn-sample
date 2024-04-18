@@ -35,7 +35,7 @@ export const authOptions: NextAuthOptions = {
             eq(systemUser.role, rolePermissions.roleName)
           )
         if (result.length) {
-          await new Promise((resolve) => setTimeout(resolve, 500))
+          await new Promise((resolve) => setTimeout(resolve, 300))
           const user = result[0].systemUser
           const permissions = result.map(({ rolePermission }) => ({
             ...rolePermission,

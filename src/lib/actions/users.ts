@@ -58,7 +58,7 @@ export async function user_findAll(
     .orderBy(systemUser.id)
     .execute()
 
-  await new Promise((resolve) => setTimeout(resolve, 1000))
+  await new Promise((resolve) => setTimeout(resolve, 500))
 
   logMessage({ message: `🔍 Found ${users.length} users` })
   return {
@@ -90,7 +90,7 @@ export async function user_findById(id: string): Promise<ActionResult> {
     .where(eq(systemUser.id, id))
     .execute()
 
-  await new Promise((resolve) => setTimeout(resolve, 1000))
+  await new Promise((resolve) => setTimeout(resolve, 500))
 
   logMessage({ message: `🔍 Found user ${id}` })
   return {
