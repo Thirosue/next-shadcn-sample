@@ -2,7 +2,7 @@
 <div align="center">Built with the Next.js App Router and Server Actions</div>
 <br />
 <div align="center">
-<a href="https://next-shadcn-dashboard-starter.vercel.app">View Demo</a>
+<a href="https://next-shadcn-sample-git-deploy-vercel-thirosues-projects.vercel.app/signin">View Demo</a>
 <span>
 </div>
 
@@ -31,11 +31,11 @@ This is a starter template using the following stack:
 
 | Pages                                                                             | Specifications                                                                                        |
 | :-------------------------------------------------------------------------------- | :---------------------------------------------------------------------------------------------------- |
-| [Signup](https://next-shadcn-dashboard-starter.vercel.app/)                       | Authentication with **NextAuth** supports Social logins and email logins(Enter dummy email for demo). |
-| [Dashboard](https://next-shadcn-dashboard-starter.vercel.app/dashboard/home)           | Cards with recharts graphs for analytics.                                                             |
-| [Users](https://next-shadcn-dashboard-starter.vercel.app/dashboard/user)          | Tanstack tables with user details client side searching, pagination etc                               |
-| [Users/new](https://next-shadcn-dashboard-starter.vercel.app/dashboard/user/new)  | A User Form.                                                                                          |
-| [Not Found](https://next-shadcn-dashboard-starter.vercel.app/dashboard/notfound)  | Not Found Page Added in the root level                                                                |
+| [Signup](https://next-shadcn-sample-git-deploy-vercel-thirosues-projects.vercel.app/signup)                       | Authentication with **NextAuth** supports Social logins and email logins(Enter dummy email for demo). |
+| [Dashboard](https://next-shadcn-sample-git-deploy-vercel-thirosues-projects.vercel.app/dashboard/home)           | Cards with recharts graphs for analytics.                                                             |
+| [Users](https://next-shadcn-sample-git-deploy-vercel-thirosues-projects.vercel.app/dashboard/user)          | Tanstack tables with user details client side searching, pagination etc                               |
+| [Users/new](https://next-shadcn-sample-git-deploy-vercel-thirosues-projects.vercel.app/dashboard/user/new)  | A User Form.                                                                                          |
+| [Not Found](https://next-shadcn-sample-git-deploy-vercel-thirosues-projects.vercel.app/notfound)  | Not Found Page Added in the root level                                                                |
 | -                                                                                 | -                                                                                                     |
 
 ## Getting Started
