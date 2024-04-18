@@ -7,7 +7,7 @@ import { User } from "@/types"
 import { Edit, MoreHorizontal, Trash } from "lucide-react"
 import { toast } from "sonner"
 
-import { deleteUserWithAuth } from "@/lib/actions/users"
+import { user_delete } from "@/lib/actions/users"
 import { showErrorToast } from "@/lib/handle-error"
 import { Button } from "@/components/ui/button"
 import {
@@ -34,7 +34,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const onConfirm = async () => {
     startSubmit(async () => {
       try {
-        deleteUserWithAuth({
+        user_delete({
           id: data.id,
           token: _csrf,
         })
