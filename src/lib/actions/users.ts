@@ -10,16 +10,25 @@ import { and, eq, like } from "drizzle-orm"
 import * as z from "zod"
 
 import { withAuthentication } from "@/lib/actions/authorization-filter"
+import { getServerSession } from "@/lib/auth"
 import { logMessage } from "@/lib/logger"
 import { csrfTokenSchema } from "@/lib/validations/auth"
 import { userUpsertSchema } from "@/lib/validations/user"
 
-async function user_findAll(
+export async function user_findAll(
   page: number,
   limit: number = 10,
   searchParams: UserSearchFormValues
 ): Promise<ActionResult> {
   noStore()
+  const session = await getServerSession()
+  if (!session?.user) {
+    return {
+      status: 401,
+      message: "Unauthorized",
+    }
+  }
+
   const conditions = []
 
   if (searchParams.role) {
@@ -58,8 +67,16 @@ async function user_findAll(
   }
 }
 
-async function user_findById(id: string): Promise<ActionResult> {
+export async function user_findById(id: string): Promise<ActionResult> {
   noStore()
+  const session = await getServerSession()
+  if (!session?.user) {
+    return {
+      status: 401,
+      message: "Unauthorized",
+    }
+  }
+
   const user = await db
     .select({
       id: systemUser.id,
@@ -82,10 +99,17 @@ async function user_findById(id: string): Promise<ActionResult> {
   }
 }
 
-async function user_upsert(
+export async function user_upsert(
   data: z.infer<typeof userUpsertSchema>
 ): Promise<ActionResult | void> {
   noStore()
+  const session = await getServerSession()
+  if (!session?.user) {
+    return {
+      status: 401,
+      message: "Unauthorized",
+    }
+  }
 
   // Make the 'token' property optional before deleting it
   const { token, ...userData } = data
@@ -132,8 +156,15 @@ const userDeleteSchema = csrfTokenSchema.extend({
   id: z.string(),
 })
 
-async function user_delete(data: z.infer<typeof userDeleteSchema>) {
+export async function user_delete(data: z.infer<typeof userDeleteSchema>) {
   noStore()
+  const session = await getServerSession()
+  if (!session?.user) {
+    return {
+      status: 401,
+      message: "Unauthorized",
+    }
+  }
 
   const user = await db
     .delete(systemUser)

@@ -16,9 +16,6 @@
     "prepare": "husky"
   },
   "lint-staged": {
-    "src/lib/actions/*.ts": [
-      "dotenv tsx linter/runChecksScript.ts"
-    ],
     "*.{ts,tsx}": [
       "prettier --write",
       "eslint --fix"

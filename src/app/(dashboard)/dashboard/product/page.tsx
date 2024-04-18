@@ -1,6 +1,6 @@
 import { ProductSearchFormValues } from "@/types"
 
-import { findAllProductsWithAuth } from "@/lib/actions/product"
+import { product_findAll } from "@/lib/actions/product"
 import { setCsrfTokens } from "@/lib/actions/token"
 import BreadCrumb from "@/components/breadcrumb"
 import { Shell } from "@/components/shell"
@@ -21,14 +21,14 @@ export default async function Page({
   const page = searchParams.page || 1
   const pageLimit = searchParams.limit || 10
 
-  const { data, totalCount } = await findAllProductsWithAuth(
+  const { data, totalCount } = await product_findAll(
     page,
     pageLimit,
     searchParams
   )
   const token = await setCsrfTokens()
 
-  const pageCount = Math.ceil(totalCount / pageLimit)
+  const pageCount = Math.ceil(totalCount! / pageLimit)
 
   return (
     <Shell variant="sidebar">
@@ -36,7 +36,7 @@ export default async function Page({
       <ProductTable
         pageNo={page}
         columns={columns}
-        totalCount={totalCount}
+        totalCount={totalCount!}
         data={data}
         pageCount={pageCount}
         searchParams={{

@@ -1,7 +1,7 @@
 import React from "react"
 
 import { setCsrfTokens } from "@/lib/actions/token"
-import { findUserByIdWithAuth } from "@/lib/actions/users"
+import { user_findById } from "@/lib/actions/users"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import BreadCrumb from "@/components/breadcrumb"
 import { Shell } from "@/components/shell"
@@ -19,7 +19,7 @@ interface UserPageProps {
 }
 
 export default async function Page({ params }: UserPageProps) {
-  const { data } = await findUserByIdWithAuth(params.userId)
+  const { data } = await user_findById(params.userId)
   const token = await setCsrfTokens()
 
   return (

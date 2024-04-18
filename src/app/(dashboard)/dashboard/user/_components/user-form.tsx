@@ -9,7 +9,7 @@ import { useForm } from "react-hook-form"
 import { toast } from "sonner"
 import * as z from "zod"
 
-import { deleteUserWithAuth, upsertUserWithAuth } from "@/lib/actions/users"
+import { user_delete, user_upsert } from "@/lib/actions/users"
 import { showErrorToast } from "@/lib/handle-error"
 import { userUpsertSchema } from "@/lib/validations/user"
 import { Button } from "@/components/ui/button"
@@ -74,7 +74,7 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData, _csrf }) => {
         title: "Check Updates",
         description: "Are you sure you want to update this user?",
       }).then(async () => {
-        const result = (await upsertUserWithAuth(data)) as ActionResult | void
+        const result = (await user_upsert(data)) as ActionResult | void
         if (!result) {
           toast.success(toastMessage)
           return
@@ -105,7 +105,7 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData, _csrf }) => {
         title: "Check Delete",
         description: "Are you sure you want to delete this user?",
       }).then(async () => {
-        await deleteUserWithAuth({
+        await user_delete({
           id: initialData.id,
           token: _csrf,
         })

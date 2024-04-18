@@ -33,12 +33,6 @@ export const navItems: NavItem[] = [
     label: "product",
   },
   {
-    title: "Product (server-side pagination use api with hono)",
-    href: "/dashboard/product2?page=1&limit=10",
-    icon: "barcode",
-    label: "product2",
-  },
-  {
     title: "SignOut",
     href: "/signout",
     icon: "logout",

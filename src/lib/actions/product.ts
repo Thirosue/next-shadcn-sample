@@ -8,16 +8,26 @@ import { and, asc, count, desc, like } from "drizzle-orm"
 import * as z from "zod"
 
 import { withAuthentication } from "@/lib/actions/authorization-filter"
+import { getServerSession } from "@/lib/auth"
 import { logMessage } from "@/lib/logger"
 import { csrfTokenSchema } from "@/lib/validations/auth"
 import { userUpsertSchema } from "@/lib/validations/user"
 
-async function product_findAll(
+export async function product_findAll(
   page: number,
   limit: number = 10,
   searchParams: ProductSearchFormValues
 ): Promise<ActionResult> {
   noStore()
+
+  const session = await getServerSession()
+  if (!session?.user) {
+    return {
+      status: 401,
+      message: "Unauthorized",
+    }
+  }
+
   const conditions = []
   let sortBy = asc(products.name)
 
@@ -86,7 +96,7 @@ async function product_findAll(
   }
 }
 
-async function product_findById(id: string): Promise<ActionResult> {
+export async function product_findById(id: string): Promise<ActionResult> {
   noStore()
 
   return {
@@ -95,7 +105,7 @@ async function product_findById(id: string): Promise<ActionResult> {
   }
 }
 
-async function product_upsert(
+export async function product_upsert(
   data: z.infer<typeof userUpsertSchema>
 ): Promise<ActionResult> {
   noStore()
@@ -109,7 +119,7 @@ const userDeleteSchema = csrfTokenSchema.extend({
   id: z.string(),
 })
 
-async function product_delete(data: z.infer<typeof userDeleteSchema>) {
+export async function product_delete(data: z.infer<typeof userDeleteSchema>) {
   noStore()
 
   return {

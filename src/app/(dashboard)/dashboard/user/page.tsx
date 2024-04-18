@@ -1,7 +1,7 @@
 import { UserSearchFormValues } from "@/types"
 
 import { setCsrfTokens } from "@/lib/actions/token"
-import { findAllUsersWithAuth } from "@/lib/actions/users"
+import { user_findAll } from "@/lib/actions/users"
 import BreadCrumb from "@/components/breadcrumb"
 import { Shell } from "@/components/shell"
 import { UserTable } from "@/app/(dashboard)/dashboard/user/_components/user-table"
@@ -12,7 +12,7 @@ export default async function Page({
 }: {
   searchParams: UserSearchFormValues
 }) {
-  const { data } = await findAllUsersWithAuth(1, 10000, searchParams)
+  const { data } = await user_findAll(1, 10000, searchParams)
   const token = await setCsrfTokens()
   return (
     <Shell variant="sidebar">
