@@ -5,7 +5,6 @@ import Link from "next/link"
 import { Product } from "@/constants/data"
 import { ProductSearchFormValues } from "@/types"
 import { useQuery } from "@tanstack/react-query"
-import type { InferResponseType } from "hono/client"
 import { hc } from "hono/client"
 import { Plus } from "lucide-react"
 
@@ -31,7 +30,6 @@ interface ProductTableProps {
 export function ProductTable({ searchParams }: ProductTableProps) {
   const client = hc<AppType>("/")
   const products = client.api.products
-  type ResType = InferResponseType<typeof products.$get>
 
   const { isPending, error, data } = useQuery({
     queryKey: ["products", searchParams],
