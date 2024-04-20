@@ -27,7 +27,7 @@ const initUsers = [
   {
     id: "user1",
     name: "John Doe",
-    email: "test@test.com",
+    email: "test@example.com",
     password: "password123",
     role: adminRole,
   },
@@ -63,8 +63,8 @@ export async function seedUsers(count = 10) {
   for (let i = 0; i < count; i++) {
     data.push({
       id: createId(),
-      name: faker.person.fullName(),
-      email: faker.internet.email(),
+      name: `test${i}User`,
+      email: `test${i}User@example.com`,
       password: faker.internet.password(),
       role: faker.helpers.shuffle(roles)[0],
     })
